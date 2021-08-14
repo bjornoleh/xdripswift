@@ -4167,7 +4167,7 @@
 			baseConfigurationReference = FB1D964808BD308C74247D66 /* Pods-xdrip.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_GROUP_IDENTIFIER = "group.com.${DEVELOPMENT_TEAM}.loopkit.LoopGroup";
+				APP_GROUP_IDENTIFIER = "group.no.artpancreas.FreeAPS-X";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = xdrip/xdripDebug.entitlements;
@@ -4197,7 +4197,7 @@
 			baseConfigurationReference = 170A1629CB2C62ADD901F4A6 /* Pods-xdrip.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_GROUP_IDENTIFIER = "group.com.${DEVELOPMENT_TEAM}.loopkit.LoopGroup";
+				APP_GROUP_IDENTIFIER = "group.no.artpancreas.FreeAPS-X";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = xdrip/xdrip.entitlements;
