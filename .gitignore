@@ -1,6 +1,6 @@
 #######
 # config files, to be edited by developer 
-xDripConfigOverride.xcconfig
+// xDripConfigOverride.xcconfig // remove from .gitignore for master-2
 
 .DS_Store
 UserInterfaceState.xcuserstate
