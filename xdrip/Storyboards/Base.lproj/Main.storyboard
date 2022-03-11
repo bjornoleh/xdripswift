@@ -202,6 +202,7 @@
                                                 </connections>
                                             </barButtonItem>
                                         </items>
+                                        <color key="barTintColor" red="0.21055939879696972" green="0.022623958883870074" blue="0.023601897841245157" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </toolbar>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C16-NQ-F1Y">
                                         <rect key="frame" x="0.0" y="50" width="390" height="389"/>
