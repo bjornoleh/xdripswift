@@ -83,6 +83,10 @@ class Texts_SettingsView {
     static let allowScreenRotation: String = {
         return NSLocalizedString("settingsviews_allowScreenRotation", tableName: filename, bundle: Bundle.main, value: "Allow Chart Rotation?", comment: "home screen settings, should the main glucose chart screen be allowed?")
     }()
+    
+    static let showMiniChart: String = {
+        return NSLocalizedString("settingsviews_showMiniChart", tableName: filename, bundle: Bundle.main, value: "Show the Mini-Chart?", comment: "home screen settings, should the mini-chart be shown?")
+    }()
 
     static let labelUseObjectives: String = {
         return NSLocalizedString("settingsviews_useobjectives", tableName: filename, bundle: Bundle.main, value: "Show Objectives in Graph?", comment: "home screen settings, use objectives in graph")
@@ -132,10 +136,6 @@ class Texts_SettingsView {
     
     static let settingsviews_showSmallBolusTreatmentsOnChart: String = {
         return NSLocalizedString("settingsviews_showSmallBolusTreatmentsOnChart", tableName: filename, bundle: Bundle.main, value: "Show Micro-bolus on Chart?", comment: "treatments settings, show the micro-bolus on main chart")
-    }()
-    
-    static let settingsviews_showSmallBolusTreatmentsInList: String = {
-        return NSLocalizedString("settingsviews_showSmallBolusTreatmentsInList", tableName: filename, bundle: Bundle.main, value: "Show Micro-bolus in List?", comment: "treatments settings, show the micro-bolus in the treatment list")
     }()
     
     // MARK: - Section Statistics
@@ -513,6 +513,14 @@ class Texts_SettingsView {
     
     static let smoothLibreValues: String = {
         return NSLocalizedString("smoothLibreValues", tableName: filename, bundle: Bundle.main, value: "Smooth Libre Values?", comment: "deloper settings, row title for 'Smooth Libre Values?'")
+    }()
+    
+    static let suppressUnLockPayLoad: String = {
+        return NSLocalizedString("suppressUnLockPayLoad", tableName: filename, bundle: Bundle.main, value: "Suppress Unlock Payload", comment: "When enabled, then it should be possible to run xDrip4iOS/Libre 2 in parallel with other app(s)")
+    }()
+    
+    static let suppressLoopShare: String = {
+        return NSLocalizedString("suppressLoopShare", tableName: filename, bundle: Bundle.main, value: "Suppress Loop Share", comment: "When enabled, readings will not be reading to shared user defaults (for loop)")
     }()
     
     static let nsLog: String = {
