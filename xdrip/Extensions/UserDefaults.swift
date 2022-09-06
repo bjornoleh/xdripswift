@@ -362,6 +362,8 @@ extension UserDefaults {
         /// - stored as data as read from transmitter
         case librePatchInfo = "librePatchInfo"
         
+        case setActiveGCM = "setActiveGCM"
+        
     }
     
     // MARK: - =====  User Configurable Settings ======
@@ -803,7 +805,17 @@ extension UserDefaults {
             set(!newValue, forKey: Key.useObjectives.rawValue)
         }
     }
+
+    @objc dynamic var setActiveGCM: Bool {
+        get {
+            return bool(forKey: Key.setActiveGCM.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.setActiveGCM.rawValue)
+        }
+    }
     
+
     /// should the target line (always shown in green) be shown on the graph?
     @objc dynamic var showTarget: Bool {
         // default value for bool in userdefaults is false, by default we will hide the target line as it could confuse users
