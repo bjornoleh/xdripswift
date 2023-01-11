@@ -755,6 +755,9 @@ final class RootViewController: UIViewController {
 
         // add observer for nightScoutTreatmentsUpdateCounter, to reload the chart whenever a treatment is added or updated or deleted changes
         UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.nightScoutTreatmentsUpdateCounter.rawValue, options: .new, context: nil)
+        
+        // add observer for stopActiveSensor, this will reset the active sensor to nil when the user disconnects an intergrated transmitter/sensor (e.g. Libre 2 Direct). This will help ensure that the sensor countdown is updated disabled until a new sensor is started.
+        UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.stopActiveSensor.rawValue, options: .new, context: nil)
 
         // setup delegate for UNUserNotificationCenter
         UNUserNotificationCenter.current().delegate = self
@@ -1071,6 +1074,9 @@ final class RootViewController: UIViewController {
             let firstCalibrationForActiveSensor = calibrationsAccessor.firstCalibrationForActiveSensor(withActivesensor: activeSensor)
             let lastCalibrationForActiveSensor = calibrationsAccessor.lastCalibrationForActiveSensor(withActivesensor: activeSensor)
             
+            /// used if loopdelay > 0, to check if there was a recent calibration. If so then no readings are added in glucoseData array for a period of loopdelay + an amount of minutes
+            let timeStampLastCalibrationForActiveSensor = lastCalibrationForActiveSensor != nil ? lastCalibrationForActiveSensor!.timeStamp : Date(timeIntervalSince1970: 0)
+            
             
             
             // next is only if smoothing is enabled, and if there's at least 11 minutes of readings in the glucoseData array, which will normally only be the case for Libre with MM/Bubble
@@ -1210,7 +1216,7 @@ final class RootViewController: UIViewController {
                         // reset latest3BgReadings
                         latest3BgReadings = bgReadingsAccessor.getLatestBgReadings(limit: 3, howOld: nil, forSensor: activeSensor, ignoreRawData: false, ignoreCalculatedValue: false)
                         
-                        if LoopManager.loopDelay() > 0 {
+                        if LoopManager.loopDelay() > 0 && abs(Date().timeIntervalSince(timeStampLastCalibrationForActiveSensor)) > LoopManager.loopDelay() + TimeInterval(minutes: 5.5) {
                             loopManager?.glucoseData.insert(GlucoseData(timeStamp: newReading.timeStamp, glucoseLevelRaw: round(newReading.calculatedValue), slopeOrdinal: newReading.slopeOrdinal(), slopeName: newReading.slopeName), at: 0)
                         }
                         
@@ -1220,7 +1226,7 @@ final class RootViewController: UIViewController {
                         
                     }
                     
-                } else if LoopManager.loopDelay() > 0 && glucose.glucoseLevelRaw > 0 {
+                } else if LoopManager.loopDelay() > 0 && glucose.glucoseLevelRaw > 0 && abs(Date().timeIntervalSince(timeStampLastCalibrationForActiveSensor)) >  LoopManager.loopDelay() + TimeInterval(minutes: 5.5) {
                     
                     // loopdelay > 0, LoopManager will use loopShareGoucoseData
                     // create a reading just to be able to fill up loopShareGoucoseData, to have them per minute
@@ -1424,6 +1430,19 @@ final class RootViewController: UIViewController {
             // refresh screenLock function if it is currently activated in order to show/hide the clock as requested
             if screenIsLocked {
                 screenLockUpdate(enabled: true)
+            }
+            
+        case UserDefaults.Key.stopActiveSensor:
+            
+            // if stopActiveSensor wasn't changed to true then no further processing
+            if UserDefaults.standard.stopActiveSensor {
+                
+                sensorStopDetected()
+                
+                updateSensorCountdown()
+                
+                UserDefaults.standard.stopActiveSensor = false
+                
             }
 
         default:
@@ -1973,8 +1992,9 @@ final class RootViewController: UIViewController {
     ///     - forceReset : if true, then force the update to be done even if the main chart is panned back in time (used for the double tap gesture)
     @objc private func updateLabelsAndChart(overrideApplicationState: Bool = false, forceReset: Bool = false) {
         
+        // TODO: Figure out why this causes a bad access exception. Keep it commented out until then
         // force treatments sync
-        UserDefaults.standard.nightScoutSyncTreatmentsRequired = true
+//        UserDefaults.standard.nightScoutSyncTreatmentsRequired = true
         
         // if glucoseChartManager not nil, then check if panned backward and if so then don't update the chart
         if let glucoseChartManager = glucoseChartManager  {
@@ -2078,6 +2098,7 @@ final class RootViewController: UIViewController {
         let diffLabelText = lastReading.unitizedDeltaString(previousBgReading: lastButOneReading, showUnit: true, highGranularity: true, mgdl: UserDefaults.standard.bloodGlucoseUnitIsMgDl)
         
         diffLabelOutlet.text = diffLabelText
+        
         
         // update the chart up to now
         updateChartWithResetEndDate()
@@ -2196,12 +2217,16 @@ final class RootViewController: UIViewController {
     }
     
     private func appendEndDateInformation(_ activeSensor: Sensor, _ textToShow: String) -> String {
-        var result = "\r\n\r\n" + Texts_HomeView.sensorEnd + " : "
+        var result = "\r\n\r\n" + Texts_HomeView.sensorEnd + ":\n"
         if activeSensor.endDate != nil {
-            result += (activeSensor.endDate?.description(with: .current))!
+            result += (activeSensor.endDate?.toStringInUserLocale(timeStyle: .short, dateStyle: .short, showTimeZone: true))!
+            result += "\r\n\r\n" + Texts_HomeView.sensorRemaining + ":\n"
+            result += (activeSensor.endDate?.daysAndHoursAgo())!
         }
         else if UserDefaults.standard.maxSensorAgeInDays > 0 {
-            result += activeSensor.startDate.addingTimeInterval(TimeInterval(hours: Double(UserDefaults.standard.maxSensorAgeInDays * 24))).description(with: .current)
+            result += activeSensor.startDate.addingTimeInterval(TimeInterval(hours: Double(UserDefaults.standard.maxSensorAgeInDays * 24))).toStringInUserLocale(timeStyle: .short, dateStyle: .short, showTimeZone: true)
+            result += "\r\n\r\n" + Texts_HomeView.sensorRemaining + ":\n"
+            result += "-" + activeSensor.startDate.addingTimeInterval(TimeInterval(hours: Double(UserDefaults.standard.maxSensorAgeInDays * 24))).daysAndHoursAgo()
         }
         else { //No end date information could be retrieved, return nothing
             return ""
@@ -2214,9 +2239,11 @@ final class RootViewController: UIViewController {
     private func showStatus() {
         
         // first sensor status
-        var textToShow = Texts_HomeView.sensorStart + " : "
+        var textToShow = "\n" + Texts_HomeView.sensorStart + ":\n"
         if let activeSensor = activeSensor {
-            textToShow += activeSensor.startDate.description(with: .current)
+            textToShow += activeSensor.startDate.toStringInUserLocale(timeStyle: .short, dateStyle: .short, showTimeZone: true)
+            textToShow += "\n\n" + Texts_HomeView.sensorDuration + ":\n"
+            textToShow += activeSensor.startDate.daysAndHoursAgo()
             textToShow += appendEndDateInformation(activeSensor, textToShow)
         } else {
             textToShow += Texts_HomeView.notStarted
@@ -2227,7 +2254,7 @@ final class RootViewController: UIViewController {
         
         // add transmitterBatteryInfo if known
         if let transmitterBatteryInfo = UserDefaults.standard.transmitterBatteryInfo {
-            textToShow += Texts_HomeView.transmitterBatteryLevel + " : " + transmitterBatteryInfo.description
+            textToShow += Texts_HomeView.transmitterBatteryLevel + ":\n" + transmitterBatteryInfo.description
             // add 1 newline with last connection timestamp
             textToShow += "\r\n\r\n"
         }
@@ -3072,8 +3099,30 @@ extension RootViewController: CGMTransmitterDelegate {
             
         }
         
-        // process new readings
-        processNewGlucoseData(glucoseData: &glucoseData, sensorAge: sensorAge)
+        // let's check to ensure that the sensor is not within the minimum warm-up time as defined in ConstantsMaster
+        var supressReadingIfSensorIsWarmingUp: Bool = false
+        
+        if let sensorAgeInSeconds = sensorAge {
+            
+            let secondsUntilWarmUpComplete = (ConstantsMaster.minimumSensorWarmUpRequiredInMinutes * 60) - sensorAgeInSeconds
+            
+            if secondsUntilWarmUpComplete > 0 {
+                
+                supressReadingIfSensorIsWarmingUp = true
+                
+                trace("Sensor is still warming up. BG reading processing will remain suppressed for another %{public}@ minutes. (%{public}@ minutes warm-up required).", log: log, category: ConstantsLog.categoryRootView, type: .info, Int(secondsUntilWarmUpComplete/60).description, ConstantsMaster.minimumSensorWarmUpRequiredInMinutes.description)
+                
+            }
+            
+        }
+        
+        // process new readings if sensor is not still warming up
+        if !supressReadingIfSensorIsWarmingUp {
+            
+            processNewGlucoseData(glucoseData: &glucoseData, sensorAge: sensorAge)
+            
+        }
+        
         
     }
     

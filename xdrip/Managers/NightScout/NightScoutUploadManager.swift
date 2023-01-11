@@ -405,16 +405,23 @@ public class NightScoutUploadManager: NSObject {
                     }
                     
                 case UserDefaults.Key.nightScoutSyncTreatmentsRequired :
-
-                    // if value is set to true, then a nightscout sync is required
-                    if UserDefaults.standard.nightScoutSyncTreatmentsRequired {
-
+                    
+                    if (keyValueObserverTimeKeeper.verifyKey(forKey: keyPathEnum.rawValue, withMinimumDelayMilliSeconds: 200)) {
+                        
+                        // if nightScoutSyncTreatmentsRequired didn't change to true then no further processing
+                        guard UserDefaults.standard.nightScoutSyncTreatmentsRequired else {return}
+                        
                         UserDefaults.standard.nightScoutSyncTreatmentsRequired = false
-
-                        syncTreatmentsWithNightScout()
-
+                        
+                        // if Nightscout is enabled, then a nightscout sync is required
+                        if UserDefaults.standard.nightScoutEnabled {
+                            
+                            syncTreatmentsWithNightScout()
+                            
+                        }
+                        
                     }
-
+                    
                 default:
                     break
                 }
@@ -481,7 +488,7 @@ public class NightScoutUploadManager: NSObject {
         
         let dataToUpload = [
             "_id": sensor.id,
-            "eventType": "Sensor Start",
+            "eventType": "Sensor Started",
             "created_at": sensor.startDate.ISOStringFromDate(),
             "enteredBy": ConstantsHomeView.applicationName
         ]
@@ -727,11 +734,6 @@ public class NightScoutUploadManager: NSObject {
 
         getOrDeleteRequest(path: nightScoutTreatmentPath + "/" + treatmentToDelete.id.split(separator: "-")[0], queries: [], httpMethod: "DELETE", completionHandler: { (data: Data?, nightScoutResult: NightScoutResult)  in
 
-            // trace data to upload as string in debug  mode
-            if let data = data, let dataAsString = String(bytes: data, encoding: .utf8) {
-                trace("    data : %{public}@", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .debug, dataAsString)
-            }
-            
             self.coreDataManager.mainManagedObjectContext.performAndWait {
 
                 if nightScoutResult.successFull() {
