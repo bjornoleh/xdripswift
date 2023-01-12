@@ -1,6 +1,9 @@
 name: Build Xdrip4iOS
 on:
+  push:
   workflow_dispatch:
+  schedule:
+    - cron: '0 17 1 */2 *' # Runs at 17:00 UTC on the 1st in Jan, Mar, May, Jul, Sep and Nov.
 
 jobs:
   build:
