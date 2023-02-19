@@ -3330,8 +3330,8 @@
 			mainGroup = F8AC425121ADEBD60078C348;
 			packageReferences = (
 				4779BCE92974303400515714 /* XCRemoteSwiftPackageReference "SwiftCharts" */,
-				4779BCEC2974306300515714 /* XCRemoteSwiftPackageReference "ActionClosurable" */,
-				4779BCEF2974307700515714 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				4779BCEC2974306300515714 /* XCRemoteSwiftPackageReference "ActionClosurable.git" */,
+				4779BCEF2974307700515714 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */,
 				4779BCF22974308F00515714 /* XCRemoteSwiftPackageReference "PieCharts" */,
 			);
 			productRefGroup = F8AC425B21ADEBD60078C348 /* Products */;
@@ -4982,7 +4982,7 @@
 				kind = branch;
 			};
 		};
-		4779BCEC2974306300515714 /* XCRemoteSwiftPackageReference "ActionClosurable" */ = {
+		4779BCEC2974306300515714 /* XCRemoteSwiftPackageReference "ActionClosurable.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/takasek/ActionClosurable.git";
 			requirement = {
@@ -4990,7 +4990,7 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		4779BCEF2974307700515714 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+		4779BCEF2974307700515714 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
@@ -5016,12 +5016,12 @@
 		};
 		4779BCED2974306300515714 /* ActionClosurable */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4779BCEC2974306300515714 /* XCRemoteSwiftPackageReference "ActionClosurable" */;
+			package = 4779BCEC2974306300515714 /* XCRemoteSwiftPackageReference "ActionClosurable.git" */;
 			productName = ActionClosurable;
 		};
 		4779BCF02974307700515714 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4779BCEF2974307700515714 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			package = 4779BCEF2974307700515714 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */;
 			productName = CryptoSwift;
 		};
 		4779BCF32974308F00515714 /* PieCharts */ = {
