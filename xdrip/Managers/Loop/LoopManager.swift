@@ -112,7 +112,7 @@ public class LoopManager:NSObject {
                     var representation = reading.dictionaryRepresentationForLoopShare
                     
                     // Adding "from" field to be able to use multiple BG sources with the same shared group in FreeAPS X
-                    representation["from"] = "xDrip"
+                    representation["from"] = "xDripRight"
                     dictionary.append(representation)
                 }
                 
@@ -123,7 +123,7 @@ public class LoopManager:NSObject {
                     var representation = reading.dictionaryRepresentationForDexcomShareUpload
                     
                     // Adding "from" field to be able to use multiple BG sources with the same shared group in FreeAPS X
-                    representation["from"] = "xDrip"
+                    representation["from"] = "xDripRight"
                     dictionary.append(representation)
                 }
                 
@@ -167,7 +167,7 @@ public class LoopManager:NSObject {
                                 "DT" : dateAsString,
                                 "Value" : value,
                                 "direction" : slopeOrdinal,
-                                "from" : "xDrip"
+                                "from" : "xDripRight"
                             ]
                             
                             newDictionary.append(newReading)
