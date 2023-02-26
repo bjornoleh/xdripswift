@@ -1,12 +1,23 @@
-name: Build Xdrip4iOS
+name: 4. Build Xdrip4iOS
+run-name: Build Xdrip4iOS
 on:
-  push:
   workflow_dispatch:
-  schedule:
-    - cron: '0 17 1 */2 *' # Runs at 17:00 UTC on the 1st in Jan, Mar, May, Jul, Sep and Nov.
+  
+  ## Remove the "#" sign from the beginning of the line below to get automated builds on push (code changes in your repository)
+  #push:
+  
+  ## Remove the "#" sign from the beginning of the two lines below to get automated builds every two months
+  #schedule:
+    #- cron: '0 17 1 */2 *' # Runs at 17:00 UTC on the 1st in Jan, Mar, May, Jul, Sep and Nov.
+
 
 jobs:
+  secrets:
+    uses: ./.github/workflows/validate_secrets.yml
+    secrets: inherit
+
   build:
+    needs: secrets
     runs-on: macos-12
     steps:
       # Uncomment to manually select latest Xcode if needed
@@ -18,10 +29,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-
-      # Install cocoapods
-      - name: Install Pods
-        run: pod install
       
       # Patch Fastlane Match to not print tables
       - name: Patch Match Tables

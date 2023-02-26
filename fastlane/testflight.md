@@ -2,7 +2,9 @@
 
 These instructions allow you to build Xdrip4iOS without having access to a Mac. They also allow you to easily install Xdrip4iOS on phones that are not connected to your computer. So you can send builds and updates to those you care for easily, or have an easy to access backup if you run Xdrip4iOS for yourself. You do not need to worry about correct Xcode/Mac versions either. An app built using this method can easily be deployed to newer versions of iOS, as soon as they are available.
 
-The setup steps are somewhat involved, but nearly all are one time steps. Subsequent builds are trivial.  Note that TestFlight requires apple id accounts 13 years or older. Your app must be updated once every 90 days, but it's a simple click to make a new build and can be done from anywhere.
+The setup steps are somewhat involved, but nearly all are one time steps. Subsequent builds are trivial. Your app must be updated once every 90 days, but it's a simple click to make a new build and can be done from anywhere.
+
+Note that TestFlight requires apple id accounts 13 years or older. This can be circumvented by logging into Media & Purchase on the child's phone with an adult's account. More details on this can be found in [LoopDocs](https://loopkit.github.io/loopdocs/gh-actions/gh-deploy/#install-testflight-loop-for-child)
 
 ## Prerequisites
 
@@ -38,10 +40,17 @@ The setup steps are somewhat involved, but nearly all are one time steps. Subseq
     * `GH_PAT`
     * `MATCH_PASSWORD` - just make up a password for this
 
+## Validate repository secrets
+
+1. Click on the "Actions" tab of your Xdrip4iOS repository.
+1. Select "1. Validate Secrets".
+1. Wait, and within a minute or two you should see a green checkmark indicating the workflow succeeded.
+1. The workflow will check if the required secrets are added and that they are correctly formatted. If errors are detected, please check the run log for details. 
+
 ## Add Identifiers for Xdrip4iOS App
 
 1. Click on the "Actions" tab of your Xdrip4iOS repository.
-1. Select "Add Identifiers".
+1. Select "2. Add Identifiers".
 1. Click "Run Workflow", and tap the green button.
 1. Wait, and within a minute or two you should see a green checkmark indicating the workflow succeeded.
 
@@ -59,8 +68,8 @@ _Please note that in default builds of Xdrip4iOS, the app group is actually iden
 
 1. Go to [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list) on the apple developer site.
 1. For each of the following identifier names:
-    * xdrip
-    * xDrip4iOS Widget
+    * xdripswift
+    * xdripswift xDrip4iOS-Widget
     * Watch App
     * Watch App WatchKit Extension
 1. Click on the identifier's name.
@@ -70,6 +79,14 @@ _Please note that in default builds of Xdrip4iOS, the app group is actually iden
 1. Click "Save".
 1. Click "Confirm".
 1. Remember to do this for each of the identifiers above.
+
+## Add NFC Tag Reading to xdripswift App ID
+1. Go to [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list) on the apple developer site.
+1. Click on the "xdripswift" identifier
+1. Scroll down to "NFC Tag Reading"
+1. Tap the check box to enable NFC Tag Reading.
+1. Click "Save".
+1. Click "Confirm".
 
 ## Create Xdrip4iOS App in App Store Connect
 
@@ -89,14 +106,14 @@ You do not need to fill out the next form. That is for submitting to the app sto
 ## Create Building Certficates
 
 1. Go back to the "Actions" tab of your Xdrip4iOS repository in github.
-1. Select "Create Certificates".
+1. Select "3. Create Certificates".
 1. Click "Run Workflow", and tap the green button.
 1. Wait, and within a minute or two you should see a green checkmark indicating the workflow succeeded.
 
 ## Build Xdrip4iOS!
 
 1. Click on the "Actions" tab of your Xdrip4iOS repository.
-1. Select "Build Xdrip4iOS". _Are you working on a previuos fork of Xdrip4iOS and not seeing any GitHub workflows in the Actions tab? You may have to change the default branch so that it contains the .github/workflows files, or merge these changes into your default branch (typically `master`)._
+1. Select "4. Build Xdrip4iOS". _Are you working on a previuos fork of Xdrip4iOS and not seeing any GitHub workflows in the Actions tab? You may have to change the default branch so that it contains the .github/workflows files, or merge these changes into your default branch (typically `master`)._
 1. Click "Run Workflow", select your branch, and tap the green button.
 1. You have some time now. Go enjoy a coffee. The build should take about 15 minutes.
 1. Your app should eventually appear on [App Store Connect](https://appstoreconnect.apple.com/apps).
