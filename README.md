@@ -1,3 +1,5 @@
+Test sync after cganged workflow 
+
 Project in development.
 
 Documentation available on https://xdrip4ios.readthedocs.io/en/latest/
