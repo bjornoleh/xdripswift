@@ -824,16 +824,40 @@ extension UserDefaults {
             set(!newValue, forKey: Key.useObjectives.rawValue)
         }
     }
-
+    
     @objc dynamic var setActiveCGM: Bool {
         get {
             return bool(forKey: Key.setActiveCGM.rawValue)
         }
         set {
             set(newValue, forKey: Key.setActiveCGM.rawValue)
+
+            if newValue {
+                if let urlTypes = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: Any]],
+                    let urlSchemes = urlTypes.first?["CFBundleURLSchemes"] as? [String],
+                    let urlScheme = urlSchemes.first {
+                    // Initialize UserDefaults with app group suite name
+                    let suiteName = Bundle.main.appGroupSuiteName
+                    let sharedDefaults = UserDefaults(suiteName: suiteName)
+                    
+                    // store the app's URL scheme as a string in shared UserDefaults
+                    sharedDefaults?.set(urlScheme, forKey: "urlScheme")
+                }
+            } else {
+                // Initialize UserDefaults with app group suite name
+                let suiteName = Bundle.main.appGroupSuiteName
+                let sharedDefaults = UserDefaults(suiteName: suiteName)
+                
+                sharedDefaults?.set(nil, forKey: "urlScheme")
+            }
+
+            // synchronize UserDefaults
+            UserDefaults.standard.synchronize()
         }
     }
-    
+
+
+
 
     /// should the target line (always shown in green) be shown on the graph?
     @objc dynamic var showTarget: Bool {
