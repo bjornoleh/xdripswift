@@ -22,9 +22,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         trace("in didFinishLaunchingWithOptions", log: log, category: ConstantsLog.categoryAppDelegate, type: .info)
         
-        return true
+        // Add observer for changes in UserDefaults
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUserDefaultsChange), name: UserDefaults.didChangeNotification, object: nil)
         
+        return true
     }
+
+    @objc func handleUserDefaultsChange() {
+        if let sharedUserDefaults = UserDefaults(suiteName: Bundle.main.appGroupSuiteName) {
+            if let urlScheme = sharedUserDefaults.string(forKey: "urlScheme") {
+                print("URL scheme is stored in UserDefaults: \(urlScheme)")
+            } else {
+                print("URL scheme (CFBundleURLSchemes) not found in UserDefaults")
+            }
+        }
+    }
+
 
     /// used to allow/prevent the specific views from changing orientation when rotating the device
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask
