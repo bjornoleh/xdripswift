@@ -1,15 +1,15 @@
 //
-//  xDrip.xcconfig
+//  xDripRight.xcconfig
 //  xdrip
 //
 //
 
-MAIN_APP_BUNDLE_IDENTIFIER = com.$(DEVELOPMENT_TEAM).xdripswift
+MAIN_APP_BUNDLE_IDENTIFIER = com.$(DEVELOPMENT_TEAM).xdripswiftRight
 
 // Application name [DEFAULT]
-MAIN_APP_DISPLAY_NAME = xDrip4iO5
-URL_SCHEMES = xdripswift
-APP_ICON = AppIcon
+MAIN_APP_DISPLAY_NAME = xDripRight
+URL_SCHEMES = xdripswiftRight
+APP_ICON = AppIconRight
 
 // Entitlements [DEFAULT]
 XDRIP_ENTITLEMENTS_RELEASE = xdrip/xDrip.entitlements
