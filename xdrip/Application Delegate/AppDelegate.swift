@@ -25,6 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Add observer for changes in UserDefaults
         NotificationCenter.default.addObserver(self, selector: #selector(handleUserDefaultsChange), name: UserDefaults.didChangeNotification, object: nil)
         
+        // Check the active build configuration and set default value of setActiveCGM accordingly
+            #if XDRIPLEFT || XDRIPRIGHT
+                UserDefaults.standard.setActiveCGM = false
+            #else
+                UserDefaults.standard.setActiveCGM = true
+            #endif
+        
         return true
     }
 
