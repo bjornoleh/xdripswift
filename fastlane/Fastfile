@@ -132,8 +132,8 @@ platform :ios do
     
     gym(
       export_method: "app-store",
-      scheme: #{APP_SCHEME},
-      output_name: "Xdrip4iOS.ipa",
+      scheme: ENV["APP_SCHEME"],
+      output_name: "#{ENV["APP_SCHEME"]}.ipa",
       configuration: "Release",
       destination: 'generic/platform=iOS',
       buildlog_path: 'buildlog'
