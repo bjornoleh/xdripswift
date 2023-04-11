@@ -12,12 +12,12 @@ on:
 
 
 jobs:
-  secrets:
-    uses: ./.github/workflows/validate_secrets.yml
-    secrets: inherit
+  #secrets:
+    #uses: ./.github/workflows/validate_secrets.yml
+    #secrets: inherit
 
   build:
-    needs: secrets
+    #needs: secrets
     runs-on: macos-12
     steps:
       # Uncomment to manually select latest Xcode if needed
