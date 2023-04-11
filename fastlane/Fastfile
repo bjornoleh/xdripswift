@@ -39,14 +39,14 @@ APP_SCHEME_ID = APP_SCHEMES[ENV["APP_SCHEME"]]
 
 platform :ios do
 
-  desc "Set ENV["APP_SCHEME"] to build xdripLeft and xdripRight"
+  desc "Set APP_SCHEME to build xdripLeft and xdripRight"
   lane :build_xdripLeft_and_xdripRight do
   ENV["APP_SCHEME"] = "xdripLeft"
   build_xdrip4ios
 
   ENV["APP_SCHEME"] = "xdripRight"
   build_xdrip4ios
-end
+  end
 
   desc "Build Xdrip4iOS"
   lane :build_xdrip4ios do
