@@ -156,7 +156,7 @@ platform :ios do
     upload_to_testflight(
       api_key: api_key,
       skip_submission: false,
-      ipa: "Xdrip4iOS.ipa",
+      ipa: "#{ENV["APP_SCHEME"]}.ipa",
       skip_waiting_for_build_processing: true,
     )
   end
