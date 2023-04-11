@@ -242,13 +242,13 @@ platform :ios do
         
         "com.#{TEAMID}.xdripswiftLeft",
         "com.#{TEAMID}.xdripswiftLeft.xDrip4iOS-Widget",
-        "com.#{TEAMID}.xdripswiftLeft.watchkitapp.watchkitextension",
-        "com.#{TEAMID}.xdripswiftLeft.watchkitapp",
+        #"com.#{TEAMID}.xdripswiftLeft.watchkitapp.watchkitextension",
+        #"com.#{TEAMID}.xdripswiftLeft.watchkitapp",
         
         "com.#{TEAMID}.xdripswiftRight",
         "com.#{TEAMID}.xdripswiftRight.xDrip4iOS-Widget",
-        "com.#{TEAMID}.xdripswiftRight.watchkitapp.watchkitextension",
-        "com.#{TEAMID}.xdripswiftRight.watchkitapp",
+        #"com.#{TEAMID}.xdripswiftRight.watchkitapp.watchkitextension",
+        #"com.#{TEAMID}.xdripswiftRight.watchkitapp",
       ]
     )
   end
