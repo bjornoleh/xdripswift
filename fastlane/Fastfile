@@ -110,7 +110,7 @@ platform :ios do
       export_method: "app-store",
       scheme: "xdrip",
       output_name: "Xdrip4iOS.ipa",
-      configuration: "Release",
+      configuration: "xDripLeft",
       destination: 'generic/platform=iOS',
       buildlog_path: 'buildlog'
     )
