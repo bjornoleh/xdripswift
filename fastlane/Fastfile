@@ -25,6 +25,7 @@ ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 
 ENV["APP_SCHEME"] = "xdrip"
 ENV["APP_SCHEME_ID"] = "xdripswift"
+ENV["CONFIGURATION_ID"] = "Debug" # "Debug" or "Release"
 
 ##############
 # Define the app scheme identifiers using a dictionary
@@ -36,6 +37,16 @@ APP_SCHEMES = {
 
 # Define a variable that replaces "xdripswift" with the appropriate scheme identifier
 APP_SCHEME_ID = APP_SCHEMES[ENV["APP_SCHEME"]]
+
+# Define the configuration using a dictionary
+CONFIGURATIONS = {
+  "xdrip": "Debug", # "Debug" or "Release"
+  "xdripLeft": "xDripLeft",
+  "xdripRight": "xDripRight"
+}
+
+# Define a variable that sets configuration based on scheme
+CONFIGURATION_ID = CONFIGURATIONS[ENV["APP_SCHEME"]]
 ################
 
 platform :ios do
@@ -135,7 +146,7 @@ platform :ios do
       export_method: "app-store",
       scheme: ENV["APP_SCHEME"],
       output_name: "#{ENV["APP_SCHEME"]}.ipa",
-      configuration: "Release",
+      configuration: ENV["CONFIGURATION_ID"],
       destination: 'generic/platform=iOS',
       buildlog_path: 'buildlog'
     )
