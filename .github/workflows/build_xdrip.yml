@@ -48,9 +48,6 @@ jobs:
       # Build signed Xdrip4iOS IPA file
       - name: Fastlane Build & Archive
         run: fastlane build_xdrip4ios
-        env:
-
-
 
       # Build signed Xdrip4iOS IPA file for both xdripLeft and xdripRight schemes
       #- name: Fastlane Build & Archive (xdripLeft and xdripRight)
@@ -67,8 +64,6 @@ jobs:
       # Upload to TestFlight
       - name: Fastlane upload to TestFlight
         run: fastlane release
-        env:
-
 
       # Upload IPA and Symbols
       - name: Upload IPA and Symbol artifacts
