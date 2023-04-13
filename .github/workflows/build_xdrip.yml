@@ -71,6 +71,10 @@ jobs:
           FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
           FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          
+          APP_SCHEME: "xdrip"
+          APP_SCHEME_ID: "xdripswift"
+          CONFIGURATION_ID: "Debug" # "Debug" or "Release"
 
       # Upload IPA and Symbols
       - name: Upload IPA and Symbol artifacts
