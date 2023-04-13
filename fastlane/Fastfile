@@ -23,9 +23,9 @@ DEVICE_NAME = ENV["DEVICE_NAME"]
 DEVICE_ID = ENV["DEVICE_ID"]
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 
-ENV["APP_SCHEME"] = "xdrip"
-ENV["APP_SCHEME_ID"] = "xdripswift"
-ENV["CONFIGURATION_ID"] = "Debug" # "Debug" or "Release"
+APP_SCHEME = ENV["APP_SCHEME"]
+APP_SCHEME_ID = ENV["APP_SCHEME_ID"]
+CONFIGURATION_ID = ENV["CONFIGURATION_ID"]
 
 ##############
 # Define the app scheme identifiers using a dictionary
@@ -51,12 +51,14 @@ CONFIGURATION_ID = CONFIGURATIONS[ENV["APP_SCHEME"]]
 
 platform :ios do
 
-  desc "Set APP_SCHEME to build xdripLeft and xdripRight"
+  desc "Set APP_SCHEME and configuration to build xdripLeft and xdripRight"
   lane :build_xdripLeft_and_xdripRight do
   ENV["APP_SCHEME"] = "xdripLeft"
+  ENV["CONFIGURATION_ID"] = "xDripLeft"
   build_xdrip4ios
 
   ENV["APP_SCHEME"] = "xdripRight"
+  ENV["CONFIGURATION_ID"] = "xDripRight"
   build_xdrip4ios
   end
 
@@ -144,9 +146,9 @@ platform :ios do
     
     gym(
       export_method: "app-store",
-      scheme: ENV["APP_SCHEME"],
-      output_name: "#{ENV["APP_SCHEME"]}.ipa",
-      configuration: ENV["CONFIGURATION_ID"],
+      scheme: "#{APP_SCHEME}",
+      output_name: "#{APP_SCHEME}.ipa",
+      configuration: "#{CONFIGURATION_ID}",
       destination: 'generic/platform=iOS',
       buildlog_path: 'buildlog'
     )
@@ -168,7 +170,7 @@ platform :ios do
     upload_to_testflight(
       api_key: api_key,
       skip_submission: false,
-      ipa: "#{ENV["APP_SCHEME"]}.ipa",
+      ipa: "#{APP_SCHEME}.ipa",
       skip_waiting_for_build_processing: true,
     )
   end

@@ -44,6 +44,10 @@ jobs:
           FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
           FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          
+          APP_SCHEME: "xdrip"
+          APP_SCHEME_ID: "xdripswift"
+          CONFIGURATION_ID: "Debug" # "Debug" or "Release"
 
       # Build signed Xdrip4iOS IPA file for both xdripLeft and xdripRight schemes
       #- name: Fastlane Build & Archive (xdripLeft and xdripRight)
