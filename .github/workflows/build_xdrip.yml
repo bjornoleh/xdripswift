@@ -10,6 +10,17 @@ on:
   #schedule:
     #- cron: '0 17 1 */2 *' # Runs at 17:00 UTC on the 1st in Jan, Mar, May, Jul, Sep and Nov.
 
+env:
+  TEAMID: ${{ secrets.TEAMID }}
+  GH_PAT: ${{ secrets.GH_PAT }}
+  FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
+  FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
+  FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  
+  APP_SCHEME: "xdrip"
+  APP_SCHEME_ID: "xdripswift"
+  CONFIGURATION_ID: "Debug" # "Debug" or "Release"
 
 jobs:
   #secrets:
@@ -38,16 +49,8 @@ jobs:
       - name: Fastlane Build & Archive
         run: fastlane build_xdrip4ios
         env:
-          TEAMID: ${{ secrets.TEAMID }}
-          GH_PAT: ${{ secrets.GH_PAT }}
-          FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
-          FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
-          FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          
-          APP_SCHEME: "xdrip"
-          APP_SCHEME_ID: "xdripswift"
-          CONFIGURATION_ID: "Debug" # "Debug" or "Release"
+
+
 
       # Build signed Xdrip4iOS IPA file for both xdripLeft and xdripRight schemes
       #- name: Fastlane Build & Archive (xdripLeft and xdripRight)
@@ -65,16 +68,7 @@ jobs:
       - name: Fastlane upload to TestFlight
         run: fastlane release
         env:
-          TEAMID: ${{ secrets.TEAMID }}
-          GH_PAT: ${{ secrets.GH_PAT }}
-          FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
-          FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
-          FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          
-          APP_SCHEME: "xdrip"
-          APP_SCHEME_ID: "xdripswift"
-          CONFIGURATION_ID: "Debug" # "Debug" or "Release"
+
 
       # Upload IPA and Symbols
       - name: Upload IPA and Symbol artifacts
