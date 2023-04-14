@@ -27,43 +27,7 @@ APP_SCHEME = ENV["APP_SCHEME"]
 APP_SCHEME_ID = ENV["APP_SCHEME_ID"]
 CONFIGURATION_ID = ENV["CONFIGURATION_ID"]
 
-##############
-# Define the app scheme identifiers using a dictionary
-#APP_SCHEMES = {
-#  "xdrip": "xdripswift",
-#  "xdripLeft": "xdripswiftLeft",
-#  "xdripRight": "xdripswiftRight"
-#}
-
-# Define a variable that replaces "xdripswift" with the appropriate scheme identifier
-#APP_SCHEME_ID = APP_SCHEMES[ENV["APP_SCHEME"]]
-
-# Define the configuration using a dictionary
-#CONFIGURATIONS = {
-#  "xdrip": "Debug", # "Debug" or "Release"
-#  "xdripLeft": "xDripLeft",
-#  "xdripRight": "xDripRight"
-#}
-
-# Define a variable that sets configuration based on scheme
-#CONFIGURATION_ID = CONFIGURATIONS[ENV["APP_SCHEME"]]
-################
-
 platform :ios do
-
-  desc "Set APP_SCHEME and configuration to build xdripLeft and xdripRight"
-  lane :build_xdripLeft_and_xdripRight do
-  ENV["APP_SCHEME"] = "xdripLeft"
-  ENV["CONFIGURATION_ID"] = "xDripLeft"
-  build_xdrip4ios
-
-  ENV["APP_SCHEME"] = "xdripRight"
-  ENV["CONFIGURATION_ID"] = "xDripRight"
-  build_xdrip4ios
-  end
-
-###############
-
   desc "Build Xdrip4iOS"
   lane :build_xdrip4ios do
     setup_ci if ENV['CI']
