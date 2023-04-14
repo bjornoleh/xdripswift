@@ -263,7 +263,7 @@ platform :ios do
       bundle_id = Spaceship::ConnectAPI::BundleId.find(identifier)
     end
 
-    find_bundle_id("com.#{TEAMID}.loopkit.Loop")
+    find_bundle_id("com.#{TEAMID}.xdripswift")
   end
 
   desc "Nuke Certs"
