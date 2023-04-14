@@ -1,7 +1,7 @@
 name: 4. Build XdripLeft/Right
 run-name: Build XdripLeft/Right
 on:
-  workflow_dispatch:
+  #workflow_dispatch:
   
   ## Remove the "#" sign from the beginning of the line below to get automated builds on push (code changes in your repository)
   #push:
