@@ -17,10 +17,6 @@ env:
   FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
   FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-  
-  APP_SCHEME: "xdrip"
-  APP_SCHEME_ID: "xdripswift"
-  CONFIGURATION_ID: "Debug" # "Debug" or "Release"
 
 jobs:
   #secrets:
@@ -31,15 +27,12 @@ jobs:
     #needs: secrets
     runs-on: macos-12
     steps:
-      # Uncomment to manually select latest Xcode if needed
-      - name: Select Latest Xcode
+      - name: Select Xcode
         run: "sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer"
 
       # Checks-out the repo
       - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          submodules: recursive
       
       # Patch Fastlane Match to not print tables
       - name: Patch Match Tables
@@ -48,22 +41,16 @@ jobs:
       # Build signed Xdrip4iOS IPA file
       - name: Fastlane Build & Archive
         run: fastlane build_xdrip4ios
+        env:
+          APP_SCHEME: "xdrip"
+          APP_SCHEME_ID: "xdripswift"
+          CONFIGURATION_ID: "Debug" # "Debug" or "Release"
 
-      # Build signed Xdrip4iOS IPA file for both xdripLeft and xdripRight schemes
-      #- name: Fastlane Build & Archive (xdripLeft and xdripRight)
-        #run: fastlane build_xdripLeft_and_xdripRight
-        #env:
-          #TEAMID: ${{ secrets.TEAMID }}
-          #GH_PAT: ${{ secrets.GH_PAT }}
-          #FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
-          #FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
-          #FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
-          #MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-
-      
       # Upload to TestFlight
       - name: Fastlane upload to TestFlight
         run: fastlane release
+        env:
+          APP_SCHEME: "xdrip"
 
       # Upload IPA and Symbols
       - name: Upload IPA and Symbol artifacts
