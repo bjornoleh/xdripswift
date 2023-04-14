@@ -1,5 +1,5 @@
-name: 4. Build xDrip4iOS
-run-name: Build xDrip4iOS (${{ github.ref_name }})
+name: Build xDripLeft+Right
+run-name: Build xDripLeft+Right (${{ github.ref_name }})
 on:
   workflow_dispatch:
   
@@ -39,20 +39,34 @@ jobs:
       - name: Patch Match Tables
         run: find /usr/local/lib/ruby/gems -name table_printer.rb | xargs sed -i "" "/puts(Terminal::Table.new(params))/d"
       
-      # Build signed Xdrip4iOS IPA file
-      - name: Fastlane Build & Archive
+      # Build signed xDripLeft IPA file
+      - name: Fastlane Build & Archive xDripLeft
         run: fastlane build_xdrip4ios
         env:
-          APP_SCHEME: "xdrip"
-          APP_ID: "xdripswift"
-          CONFIGURATION: "Debug" # "Debug" or "Release"
-
-      # Upload to TestFlight
-      - name: Fastlane upload to TestFlight
+          APP_SCHEME: "xdripLeft"
+          APP_ID: "xdripswiftLeft"
+          CONFIGURATION: "xDripLeft"
+          
+      # Build signed xDripRight IPA file
+      - name: Fastlane Build & Archive xDripRight
+        run: fastlane build_xdrip4ios
+        env:
+          APP_SCHEME: "xdripRight"
+          APP_ID: "xdripswiftRight"
+          CONFIGURATION: "xDripRight"
+      
+      # Upload xDripLeft to TestFlight
+      - name: Fastlane upload xDripLeft to TestFlight
         run: fastlane release
         env:
-          APP_SCHEME: "xdrip"
-
+          APP_SCHEME: "xdripLeft"
+          
+      # Upload xDripRight to TestFlight
+      - name: Fastlane upload xDripRight to TestFlight
+        run: fastlane release
+        env:
+          APP_SCHEME: "xdripRight"
+          
       # Upload IPA and Symbols
       - name: Upload IPA and Symbol artifacts
         uses: actions/upload-artifact@v3
