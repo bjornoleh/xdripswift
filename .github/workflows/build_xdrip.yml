@@ -43,7 +43,7 @@ jobs:
         run: fastlane build_xdrip4ios
         env:
           APP_SCHEME: "xdrip"
-          APP_SCHEME_ID: "xdripswift"
+          APP_ID: "xdripswift"
           CONFIGURATION_ID: "Debug" # "Debug" or "Release"
 
       # Upload to TestFlight

@@ -24,7 +24,7 @@ DEVICE_ID = ENV["DEVICE_ID"]
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 
 APP_SCHEME = ENV["APP_SCHEME"]
-APP_SCHEME_ID = ENV["APP_SCHEME_ID"]
+APP_ID = ENV["APP_ID"]
 CONFIGURATION_ID = ENV["CONFIGURATION_ID"]
 
 platform :ios do
@@ -44,7 +44,7 @@ platform :ios do
     )
 
     previous_build_number = latest_testflight_build_number(
-      app_identifier: "com.#{TEAMID}.#{APP_SCHEME_ID}",
+      app_identifier: "com.#{TEAMID}.#{APP_ID}",
       api_key: api_key,
     )
 
@@ -59,15 +59,15 @@ platform :ios do
       type: "appstore",
       git_basic_authorization: Base64.strict_encode64("#{GITHUB_REPOSITORY_OWNER}:#{GH_PAT}"),
       app_identifier: [
-        "com.#{TEAMID}.#{APP_SCHEME_ID}",
-        "com.#{TEAMID}.#{APP_SCHEME_ID}.xDrip4iOS-Widget",
-        "com.#{TEAMID}.#{APP_SCHEME_ID}.watchkitapp",
-        "com.#{TEAMID}.#{APP_SCHEME_ID}.watchkitapp.watchkitextension"
+        "com.#{TEAMID}.#{APP_ID}",
+        "com.#{TEAMID}.#{APP_ID}.xDrip4iOS-Widget",
+        "com.#{TEAMID}.#{APP_ID}.watchkitapp",
+        "com.#{TEAMID}.#{APP_ID}.watchkitapp.watchkitextension"
       ]
     )
 
     previous_build_number = latest_testflight_build_number(
-      app_identifier: "com.#{TEAMID}.#{APP_SCHEME_ID}",
+      app_identifier: "com.#{TEAMID}.#{APP_ID}",
       api_key: api_key,
     )
 
@@ -84,28 +84,28 @@ platform :ios do
 
     update_code_signing_settings(
       path: "#{GITHUB_WORKSPACE}/xdrip.xcodeproj",
-      profile_name: mapping["com.#{TEAMID}.#{APP_SCHEME_ID}"],
+      profile_name: mapping["com.#{TEAMID}.#{APP_ID}"],
       code_sign_identity: "iPhone Distribution",
       targets: ["xdrip"]
     )
 
     update_code_signing_settings(
       path: "#{GITHUB_WORKSPACE}/xdrip.xcodeproj",
-      profile_name: mapping["com.#{TEAMID}.#{APP_SCHEME_ID}.xDrip4iOS-Widget"],
+      profile_name: mapping["com.#{TEAMID}.#{APP_ID}.xDrip4iOS-Widget"],
       code_sign_identity: "iPhone Distribution",
       targets: ["xDrip4iOS Widget"]
     )
     
     update_code_signing_settings(
       path: "#{GITHUB_WORKSPACE}/xdrip.xcodeproj",
-      profile_name: mapping["com.#{TEAMID}.#{APP_SCHEME_ID}.watchkitapp"],
+      profile_name: mapping["com.#{TEAMID}.#{APP_ID}.watchkitapp"],
       code_sign_identity: "iPhone Distribution",
       targets: ["Watch App"]
     )
 
     update_code_signing_settings(
       path: "#{GITHUB_WORKSPACE}/xdrip.xcodeproj",
-      profile_name: mapping["com.#{TEAMID}.#{APP_SCHEME_ID}.watchkitapp.watchkitextension"],
+      profile_name: mapping["com.#{TEAMID}.#{APP_ID}.watchkitapp.watchkitextension"],
       code_sign_identity: "iPhone Distribution",
       targets: ["Watch App WatchKit Extension"]
     )
