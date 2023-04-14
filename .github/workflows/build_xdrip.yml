@@ -44,7 +44,7 @@ jobs:
         env:
           APP_SCHEME: "xdrip"
           APP_ID: "xdripswift"
-          CONFIGURATION_ID: "Debug" # "Debug" or "Release"
+          CONFIGURATION: "Debug" # "Debug" or "Release"
 
       # Upload to TestFlight
       - name: Fastlane upload to TestFlight

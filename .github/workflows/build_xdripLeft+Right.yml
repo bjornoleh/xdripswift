@@ -44,7 +44,7 @@ jobs:
         env:
           APP_SCHEME: "xdripLeft"
           APP_ID: "xdripswiftLeft"
-          CONFIGURATION_ID: "xDripLeft"
+          CONFIGURATION: "xDripLeft"
           
       # Build signed xDripRight IPA file
       - name: Fastlane Build & Archive xDripRight
@@ -52,7 +52,7 @@ jobs:
         env:
           APP_SCHEME: "xdripRight"
           APP_ID: "xdripswiftRight"
-          CONFIGURATION_ID: "xDripRight"
+          CONFIGURATION: "xDripRight"
       
       # Upload xDripLeft to TestFlight
       - name: Fastlane upload xDripLeft to TestFlight
