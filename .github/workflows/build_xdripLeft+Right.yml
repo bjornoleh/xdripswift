@@ -27,15 +27,12 @@ jobs:
     #needs: secrets
     runs-on: macos-12
     steps:
-      # Uncomment to manually select latest Xcode if needed
-      - name: Select Latest Xcode
+      - name: Select Xcode
         run: "sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer"
 
       # Checks-out the repo
       - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          submodules: recursive
       
       # Patch Fastlane Match to not print tables
       - name: Patch Match Tables
@@ -62,16 +59,12 @@ jobs:
         run: fastlane release
         env:
           APP_SCHEME: "xdripLeft"
-          APP_SCHEME_ID: "xdripswiftLeft"
-          CONFIGURATION_ID: "xDripLeft"
           
       # Upload xDripRight to TestFlight
       - name: Fastlane upload xDripRight to TestFlight
         run: fastlane release
         env:
           APP_SCHEME: "xdripRight"
-          APP_SCHEME_ID: "xdripswiftRight"
-          CONFIGURATION_ID: "xDripRight"
           
       # Upload IPA and Symbols
       - name: Upload IPA and Symbol artifacts
