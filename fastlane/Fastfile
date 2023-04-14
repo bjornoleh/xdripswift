@@ -161,7 +161,8 @@ platform :ios do
 
     configure_bundle_id("xdrip", "com.#{TEAMID}.xdripswift", [
       Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
-      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT
+      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT,
+      Spaceship::ConnectAPI::BundleIdCapability::Type::NFC_TAG_READING
     ])
 
     configure_bundle_id("xDrip4iOS Widget", "com.#{TEAMID}.xdripswift.xDrip4iOS-Widget", [
@@ -179,7 +180,8 @@ platform :ios do
     ### identifiers xdripswiftLeft ###
     configure_bundle_id("xdrip", "com.#{TEAMID}.xdripswiftLeft", [
       Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
-      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT
+      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT,
+      Spaceship::ConnectAPI::BundleIdCapability::Type::NFC_TAG_READING
     ])
 
     configure_bundle_id("xDrip4iOS Widget", "com.#{TEAMID}.xdripswiftLeft.xDrip4iOS-Widget", [
@@ -197,7 +199,8 @@ platform :ios do
     ### identifiers xdripswiftRight ###
     configure_bundle_id("xdrip", "com.#{TEAMID}.xdripswiftRight", [
       Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
-      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT
+      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT,
+      Spaceship::ConnectAPI::BundleIdCapability::Type::NFC_TAG_READING
     ])
 
     configure_bundle_id("xDrip4iOS Widget", "com.#{TEAMID}.xdripswiftRight.xDrip4iOS-Widget", [
