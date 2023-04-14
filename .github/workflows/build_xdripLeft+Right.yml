@@ -1,4 +1,4 @@
-name: 4. Build XdripLeft+Right
+name: Build XdripLeft+Right
 run-name: Build XdripLeft+Right ${{ github.ref_name }}
 on:
   workflow_dispatch:
