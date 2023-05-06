@@ -53,8 +53,9 @@ jobs:
         env:
           APP_SCHEME: "xdrip"
 
-      # Upload IPA and Symbols
-      - name: Upload IPA and Symbol artifacts
+      # Upload Build artifacts
+      - name: Upload build log, IPA and Symbol artifacts
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
