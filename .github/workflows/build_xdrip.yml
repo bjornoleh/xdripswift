@@ -19,11 +19,10 @@ env:
   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
-      # Uncomment to manually select Xcode version if needed
-      #- name: Select Xcode version
-      #  run: "sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer"
+      - name: Select Xcode version
+        run: "sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer"
 
       # Checks-out the repo
       - name: Checkout Repo
