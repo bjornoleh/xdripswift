@@ -17,14 +17,8 @@ env:
   FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
   FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-
 jobs:
-  #secrets:
-    #uses: ./.github/workflows/validate_secrets.yml
-    #secrets: inherit
-
   build:
-    #needs: secrets
     runs-on: macos-12
     steps:
       # Uncomment to manually select Xcode version if needed
