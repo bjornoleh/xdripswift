@@ -549,6 +549,20 @@ final class RootViewController: UIViewController {
         super.viewDidLoad()
         self.configureWatchKitSession()
         
+
+        
+        // Set the background color of the toolbar
+        var bgColor: UIColor?
+        #if XDRIPLEFT
+        bgColor = UIColor(named: "LeftColor")
+        #elseif XDRIPRIGHT
+        bgColor = UIColor(named: "RightColor")
+        #endif
+        
+        if let color = bgColor {
+            UIToolbar.appearance().barTintColor = color
+        }
+        
         // if the user requested to hide the help icon on the main screen, then remove it (and the flexible space next to it)
         // this is because we keep the help icon as the last one in the toolbar item array.
         if !UserDefaults.standard.showHelpIcon {

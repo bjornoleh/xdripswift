@@ -203,6 +203,22 @@ final class SettingsViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        var bgColor: UIColor?
+        #if XDRIPLEFT
+        bgColor = UIColor(named: "LeftColor")
+        #elseif XDRIPRIGHT
+        bgColor = UIColor(named: "RightColor")
+        #endif
+        
+        if let color = bgColor {
+            self.tableView.backgroundColor = color
+        }
+    }
+
+    
     // MARK: - other overriden functions
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -244,8 +260,8 @@ final class SettingsViewController: UIViewController {
     // MARK: - Private helper functions
     
     private func setupView() {
-        setupTableView()
-    }
+            setupTableView()
+        }
 
     /// setup datasource, delegate, seperatorInset
     private func setupTableView() {

@@ -1,0 +1,77 @@
+name: Build xDripLeft+Right
+run-name: Build xDripLeft+Right (${{ github.ref_name }})
+on:
+  workflow_dispatch:
+  
+  ## Remove the "#" sign from the beginning of the line below to get automated builds on push (code changes in your repository)
+  #push:
+  
+  ## Remove the "#" sign from the beginning of the two lines below to get automated builds every two months
+  #schedule:
+    #- cron: '0 17 1 */2 *' # Runs at 17:00 UTC on the 1st in Jan, Mar, May, Jul, Sep and Nov.
+
+env:
+  TEAMID: ${{ secrets.TEAMID }}
+  GH_PAT: ${{ secrets.GH_PAT }}
+  FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
+  FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
+  FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
+jobs:
+  #secrets:
+    #uses: ./.github/workflows/validate_secrets.yml
+    #secrets: inherit
+
+  build:
+    #needs: secrets
+    runs-on: macos-12
+    steps:
+      # Uncomment to manually select Xcode version if needed
+      #- name: Select Xcode version
+      #  run: "sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer"
+
+      # Checks-out the repo
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      
+      # Patch Fastlane Match to not print tables
+      - name: Patch Match Tables
+        run: find /usr/local/lib/ruby/gems -name table_printer.rb | xargs sed -i "" "/puts(Terminal::Table.new(params))/d"
+      
+      # Build signed xDripLeft IPA file
+      - name: Fastlane Build & Archive xDripLeft
+        run: fastlane build_xdrip4ios
+        env:
+          APP_SCHEME: "xdripLeft"
+          APP_ID: "xdripswiftLeft"
+          CONFIGURATION: "xDripLeft"
+          
+      # Build signed xDripRight IPA file
+      - name: Fastlane Build & Archive xDripRight
+        run: fastlane build_xdrip4ios
+        env:
+          APP_SCHEME: "xdripRight"
+          APP_ID: "xdripswiftRight"
+          CONFIGURATION: "xDripRight"
+      
+      # Upload xDripLeft to TestFlight
+      - name: Fastlane upload xDripLeft to TestFlight
+        run: fastlane release
+        env:
+          APP_SCHEME: "xdripLeft"
+          
+      # Upload xDripRight to TestFlight
+      - name: Fastlane upload xDripRight to TestFlight
+        run: fastlane release
+        env:
+          APP_SCHEME: "xdripRight"
+          
+      # Upload IPA and Symbols
+      - name: Upload IPA and Symbol artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            artifacts
+            buildlog

@@ -34,12 +34,25 @@ final class TreatmentsNavigationController: UINavigationController {
 	
 	// MARK: - overrides
 	
-	override func viewDidLoad() {
-		super.viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        var bgColor: UIColor?
+        #if XDRIPLEFT
+        bgColor = UIColor(named: "LeftColor")
+        #elseif XDRIPRIGHT
+        bgColor = UIColor(named: "RightColor")
+        #endif
+        
+        if let color = bgColor {
+            navigationBar.backgroundColor = color
+            navigationBar.barTintColor = color
+            
+        }
+        
+        delegate = self
 		
-		delegate = self
-		
-	}
+    }
 	
 	override func viewDidAppear(_ animated: Bool) {
 		

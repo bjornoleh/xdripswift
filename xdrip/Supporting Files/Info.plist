@@ -25,7 +25,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>xdripswift</string>
+				<string>$(URL_SCHEMES)</string>
 			</array>
 		</dict>
 	</array>
