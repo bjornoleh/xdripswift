@@ -65,7 +65,7 @@ jobs:
       #if: github.ref == 'refs/heads/${{ env.TARGET_BRANCH }}'
       uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
       with:
-        time_elapsed: 50 # Time elapsed from the previous commit to trigger a new automated commit (in days)
+        time_elapsed: 0 # Time elapsed from the previous commit to trigger a new automated commit (in days)
 
   build:
     needs: check_latest_from_upstream
