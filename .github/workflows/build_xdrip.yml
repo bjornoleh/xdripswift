@@ -53,7 +53,7 @@ jobs:
     
     - name: No new commits
       if: steps.sync.outputs.has_new_commits == 'false'
-      run: echo echo "There were no new commits."
+      run: echo "There were no new commits."
       
     - name: Show value of 'has_new_commits'
       run: |
@@ -97,7 +97,7 @@ jobs:
     
       - name: No new commits
         if: steps.sync.outputs.has_new_commits == 'false'
-        run: echo echo "There were no new commits."
+        run: echo "There were no new commits."
       
       - name: Show value of 'has_new_commits'
         run: |
