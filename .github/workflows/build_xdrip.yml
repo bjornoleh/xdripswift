@@ -79,30 +79,30 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-    - name: Sync upstream changes
-      if: ${{ env.SYNC_UPSTREAM == 'true' }} && github.repository_owner != 'JohanDegraeve' # do not run the upstream sync action on the upstream repository
-      id: sync
-      uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
-      with:
-        target_sync_branch: ${{ env.TARGET_BRANCH }}
-        shallow_since: 6 months ago
-        target_repo_token: ${{ secrets.GH_PAT }}
-        upstream_sync_branch: ${{ env.UPSTREAM_BRANCH }}
-        upstream_sync_repo: ${{ env.UPSTREAM_REPO }}
+      - name: Sync upstream changes
+        if: ${{ env.SYNC_UPSTREAM == 'true' }} && github.repository_owner != 'JohanDegraeve' # do not run the upstream sync action on the upstream repository
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          target_sync_branch: ${{ env.TARGET_BRANCH }}
+          shallow_since: 6 months ago
+          target_repo_token: ${{ secrets.GH_PAT }}
+          upstream_sync_branch: ${{ env.UPSTREAM_BRANCH }}
+          upstream_sync_repo: ${{ env.UPSTREAM_REPO }}
       
-    # Step 3: Display a sample message based on the sync output var 'has_new_commits'
-    - name: New commits found
-      if: steps.sync.outputs.has_new_commits == 'true'
-      run: echo "New commits were found to sync."
+      # Step 3: Display a sample message based on the sync output var 'has_new_commits'
+      - name: New commits found
+        if: steps.sync.outputs.has_new_commits == 'true'
+        run: echo "New commits were found to sync."
     
-    - name: No new commits
-      if: steps.sync.outputs.has_new_commits == 'false'
-      run: echo echo "There were no new commits."
+      - name: No new commits
+        if: steps.sync.outputs.has_new_commits == 'false'
+        run: echo echo "There were no new commits."
       
-    - name: Show value of 'has_new_commits'
-      run: |
-        echo ${{ steps.sync.outputs.has_new_commits }}
-        echo "NEW_COMMITS=${{ steps.sync.outputs.has_new_commits }}" >> $GITHUB_OUTPUT
+      - name: Show value of 'has_new_commits'
+        run: |
+          echo ${{ steps.sync.outputs.has_new_commits }}
+          echo "NEW_COMMITS=${{ steps.sync.outputs.has_new_commits }}" >> $GITHUB_OUTPUT
         
       # Patch Fastlane Match to not print tables
       - name: Patch Match Tables
