@@ -12,7 +12,7 @@ on:
 env:
   UPSTREAM_REPO: JohanDegraeve/xdripswift
   UPSTREAM_BRANCH: ${{ github.ref_name }} # branch on upstream repository to sync from (relpace with specific branch name if needed)
-  TARGET_BRANCH: ${{ github.ref_name }} # target branch on fork to be kept in sync, and target branch on upstream to be kept alive (relpace with specific branch name if needed)
+  TARGET_BRANCH: master-høyre # non-default branch name  # target branch on fork to be kept in sync, and target branch on upstream to be kept alive (relpace with specific branch name if needed)
   SYNC_UPSTREAM: 'true' # set to 'false' or 'true' to disable / enable syncing of fork with upstream repository
   
 jobs:
@@ -82,6 +82,11 @@ jobs:
       # Checks-out the repo
       - name: Checkout Repo
         uses: actions/checkout@v3
+        with:
+          # optional: set the branch to checkout,
+          # sync action checks out your 'target_sync_branch' anyway
+          #submodules: recursive 
+          ref: ${{ env.TARGET_BRANCH }}
       
       # Patch Fastlane Match to not print tables
       - name: Patch Match Tables
