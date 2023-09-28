@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,6 @@
 		470824D3297484B500C52317 /* SwiftCharts in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 470824D1297484B500C52317 /* SwiftCharts */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		470B618A270C448000561E56 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 470B6188270C448000561E56 /* Interface.storyboard */; };
 		470B618C270C448100561E56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 470B618B270C448100561E56 /* Assets.xcassets */; };
-		470B6192270C448100561E56 /* Watch App WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 470B6191270C448100561E56 /* Watch App WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		470B6197270C448100561E56 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470B6196270C448100561E56 /* InterfaceController.swift */; };
 		470B6199270C448100561E56 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470B6198270C448100561E56 /* ExtensionDelegate.swift */; };
 		470B619B270C448100561E56 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470B619A270C448100561E56 /* ComplicationController.swift */; };
@@ -137,7 +136,7 @@
 		F821CF6B229FC22D005C1E43 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F821CF6A229FC22D005C1E43 /* Endpoint.swift */; };
 		F821CF6F229FC280005C1E43 /* Endpoint+NightScout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F821CF6E229FC280005C1E43 /* Endpoint+NightScout.swift */; };
 		F821CF7B22A1D359005C1E43 /* NightScoutFollowerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F821CF7A22A1D359005C1E43 /* NightScoutFollowerDelegate.swift */; };
-		F821CF7D22A46CDD005C1E43 /* 1-millisecond-of-silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F821CF7C22A46CDD005C1E43 /* 1-millisecond-of-silence.mp3 */; };
+		F821CF7D22A46CDD005C1E43 /* 1-millisecond-of-silence.caf in Resources */ = {isa = PBXBuildFile; fileRef = F821CF7C22A46CDD005C1E43 /* 1-millisecond-of-silence.caf */; };
 		F821CF7F22A4EDCF005C1E43 /* 20ms-of-silence.caf in Resources */ = {isa = PBXBuildFile; fileRef = F821CF7E22A4EDCF005C1E43 /* 20ms-of-silence.caf */; };
 		F821CF8122A5C814005C1E43 /* RepeatingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F821CF8022A5C814005C1E43 /* RepeatingTimer.swift */; };
 		F821CF8E22AB090C005C1E43 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F821CF8D22AB090C005C1E43 /* DatePickerViewController.swift */; };
@@ -294,7 +293,7 @@
 		F870D3D325126A49008967B0 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F870D3D225126A49008967B0 /* NotificationCenter.framework */; };
 		F870D3D625126A49008967B0 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F870D3D525126A49008967B0 /* TodayViewController.swift */; };
 		F870D3D925126A49008967B0 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F870D3D725126A49008967B0 /* MainInterface.storyboard */; };
-		F870D3DD25126A49008967B0 /* xDrip4iOS Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F870D3D125126A49008967B0 /* xDrip4iOS Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F870D3DD25126A49008967B0 /* xDrip4iOS Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F870D3D125126A49008967B0 /* xDrip4iOS Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F870D3EA25129C43008967B0 /* Glucose+GlucoseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = F870D3E925129C43008967B0 /* Glucose+GlucoseKit.swift */; };
 		F870D3EC25129FC2008967B0 /* XDripClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F870D3EB25129FC2008967B0 /* XDripClient.swift */; };
 		F870D3EE2513B786008967B0 /* Trace.swift in Sources */ = {isa = PBXBuildFile; fileRef = F870D3ED2513B786008967B0 /* Trace.swift */; };
@@ -382,19 +381,19 @@
 		F8B3A79722635A25004BA588 /* AlertEntry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3A79222635A25004BA588 /* AlertEntry+CoreDataProperties.swift */; };
 		F8B3A7B2226A0878004BA588 /* TextsAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3A7B1226A0878004BA588 /* TextsAlerts.swift */; };
 		F8B3A7B5226A0A71004BA588 /* Alerts.strings in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7B3226A0A71004BA588 /* Alerts.strings */; };
-		F8B3A7C6226CC0B7004BA588 /* shortlow2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7B8226CC0B7004BA588 /* shortlow2.mp3 */; };
-		F8B3A7C7226CC0B7004BA588 /* shortlow3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7B9226CC0B7004BA588 /* shortlow3.mp3 */; };
-		F8B3A7C8226CC0B7004BA588 /* bruteforce.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BA226CC0B7004BA588 /* bruteforce.mp3 */; };
-		F8B3A7C9226CC0B7004BA588 /* modern2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BB226CC0B7004BA588 /* modern2.mp3 */; };
-		F8B3A7CA226CC0B7004BA588 /* shortlow1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BC226CC0B7004BA588 /* shortlow1.mp3 */; };
-		F8B3A7CB226CC0B7004BA588 /* shortlow4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BD226CC0B7004BA588 /* shortlow4.mp3 */; };
-		F8B3A7CC226CC0B7004BA588 /* shorthigh1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BE226CC0B7004BA588 /* shorthigh1.mp3 */; };
-		F8B3A7CD226CC0B7004BA588 /* shorthigh3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BF226CC0B7004BA588 /* shorthigh3.mp3 */; };
-		F8B3A7CE226CC0B7004BA588 /* shorthigh2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C0226CC0B7004BA588 /* shorthigh2.mp3 */; };
-		F8B3A7CF226CC0B7004BA588 /* shorthigh4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C1226CC0B7004BA588 /* shorthigh4.mp3 */; };
-		F8B3A7D0226CC0B7004BA588 /* modernalarm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C2226CC0B7004BA588 /* modernalarm.mp3 */; };
-		F8B3A7D1226CC0B7004BA588 /* betterwakeup.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C3226CC0B7004BA588 /* betterwakeup.mp3 */; };
-		F8B3A7D2226CC0B7004BA588 /* spaceship.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C4226CC0B7004BA588 /* spaceship.mp3 */; };
+		F8B3A7C6226CC0B7004BA588 /* shortlow2.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7B8226CC0B7004BA588 /* shortlow2.caf */; };
+		F8B3A7C7226CC0B7004BA588 /* shortlow3.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7B9226CC0B7004BA588 /* shortlow3.caf */; };
+		F8B3A7C8226CC0B7004BA588 /* bruteforce.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BA226CC0B7004BA588 /* bruteforce.caf */; };
+		F8B3A7C9226CC0B7004BA588 /* modern2.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BB226CC0B7004BA588 /* modern2.caf */; };
+		F8B3A7CA226CC0B7004BA588 /* shortlow1.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BC226CC0B7004BA588 /* shortlow1.caf */; };
+		F8B3A7CB226CC0B7004BA588 /* shortlow4.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BD226CC0B7004BA588 /* shortlow4.caf */; };
+		F8B3A7CC226CC0B7004BA588 /* shorthigh1.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BE226CC0B7004BA588 /* shorthigh1.caf */; };
+		F8B3A7CD226CC0B7004BA588 /* shorthigh3.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7BF226CC0B7004BA588 /* shorthigh3.caf */; };
+		F8B3A7CE226CC0B7004BA588 /* shorthigh2.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C0226CC0B7004BA588 /* shorthigh2.caf */; };
+		F8B3A7CF226CC0B7004BA588 /* shorthigh4.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C1226CC0B7004BA588 /* shorthigh4.caf */; };
+		F8B3A7D0226CC0B7004BA588 /* modernalarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C2226CC0B7004BA588 /* modernalarm.caf */; };
+		F8B3A7D1226CC0B7004BA588 /* betterwakeup.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C3226CC0B7004BA588 /* betterwakeup.caf */; };
+		F8B3A7D2226CC0B7004BA588 /* spaceship.caf in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C4226CC0B7004BA588 /* spaceship.caf */; };
 		F8B3A7D3226CC0B7004BA588 /* xdripalert.aif in Resources */ = {isa = PBXBuildFile; fileRef = F8B3A7C5226CC0B7004BA588 /* xdripalert.aif */; };
 		F8B3A7DF226E48C1004BA588 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3A7DE226E48C1004BA588 /* SoundPlayer.swift */; };
 		F8B3A7FA2278E0E8004BA588 /* SettingsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3A7F22278E0E7004BA588 /* SettingsViewModelProtocol.swift */; };
@@ -564,13 +563,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		470B6193270C448100561E56 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F8AC425221ADEBD60078C348 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 470B6190270C448100561E56;
-			remoteInfo = "Watch App WatchKit Extension";
-		};
 		470B619F270C448200561E56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F8AC425221ADEBD60078C348 /* Project object */;
@@ -610,26 +602,15 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		470B61A5270C448200561E56 /* Embed App Extensions */ = {
+		F870D3DE25126A49008967B0 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				470B6192270C448100561E56 /* Watch App WatchKit Extension.appex in Embed App Extensions */,
+				F870D3DD25126A49008967B0 /* xDrip4iOS Widget.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F870D3DE25126A49008967B0 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				F870D3DD25126A49008967B0 /* xDrip4iOS Widget.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -710,7 +691,6 @@
 		470B6186270C448000561E56 /* xDrip4iO5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xDrip4iO5.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		470B6189270C448000561E56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		470B618B270C448100561E56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		470B6191270C448100561E56 /* Watch App WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Watch App WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		470B6196270C448100561E56 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
 		470B6198270C448100561E56 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		470B619A270C448100561E56 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
@@ -1041,7 +1021,7 @@
 		F821CF6A229FC22D005C1E43 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		F821CF6E229FC280005C1E43 /* Endpoint+NightScout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Endpoint+NightScout.swift"; sourceTree = "<group>"; };
 		F821CF7A22A1D359005C1E43 /* NightScoutFollowerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightScoutFollowerDelegate.swift; sourceTree = "<group>"; };
-		F821CF7C22A46CDD005C1E43 /* 1-millisecond-of-silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "1-millisecond-of-silence.mp3"; sourceTree = "<group>"; };
+		F821CF7C22A46CDD005C1E43 /* 1-millisecond-of-silence.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = "1-millisecond-of-silence.caf"; sourceTree = "<group>"; };
 		F821CF7E22A4EDCF005C1E43 /* 20ms-of-silence.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "20ms-of-silence.caf"; sourceTree = "<group>"; };
 		F821CF8022A5C814005C1E43 /* RepeatingTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingTimer.swift; sourceTree = "<group>"; };
 		F821CF8D22AB090C005C1E43 /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
@@ -1325,19 +1305,19 @@
 		F8B3A79222635A25004BA588 /* AlertEntry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertEntry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F8B3A7B1226A0878004BA588 /* TextsAlerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextsAlerts.swift; sourceTree = "<group>"; };
 		F8B3A7B6226A0B12004BA588 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Alerts.strings; sourceTree = "<group>"; };
-		F8B3A7B8226CC0B7004BA588 /* shortlow2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shortlow2.mp3; sourceTree = "<group>"; };
-		F8B3A7B9226CC0B7004BA588 /* shortlow3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shortlow3.mp3; sourceTree = "<group>"; };
-		F8B3A7BA226CC0B7004BA588 /* bruteforce.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bruteforce.mp3; sourceTree = "<group>"; };
-		F8B3A7BB226CC0B7004BA588 /* modern2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = modern2.mp3; sourceTree = "<group>"; };
-		F8B3A7BC226CC0B7004BA588 /* shortlow1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shortlow1.mp3; sourceTree = "<group>"; };
-		F8B3A7BD226CC0B7004BA588 /* shortlow4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shortlow4.mp3; sourceTree = "<group>"; };
-		F8B3A7BE226CC0B7004BA588 /* shorthigh1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shorthigh1.mp3; sourceTree = "<group>"; };
-		F8B3A7BF226CC0B7004BA588 /* shorthigh3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shorthigh3.mp3; sourceTree = "<group>"; };
-		F8B3A7C0226CC0B7004BA588 /* shorthigh2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shorthigh2.mp3; sourceTree = "<group>"; };
-		F8B3A7C1226CC0B7004BA588 /* shorthigh4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shorthigh4.mp3; sourceTree = "<group>"; };
-		F8B3A7C2226CC0B7004BA588 /* modernalarm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = modernalarm.mp3; sourceTree = "<group>"; };
-		F8B3A7C3226CC0B7004BA588 /* betterwakeup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = betterwakeup.mp3; sourceTree = "<group>"; };
-		F8B3A7C4226CC0B7004BA588 /* spaceship.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = spaceship.mp3; sourceTree = "<group>"; };
+		F8B3A7B8226CC0B7004BA588 /* shortlow2.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shortlow2.caf; sourceTree = "<group>"; };
+		F8B3A7B9226CC0B7004BA588 /* shortlow3.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shortlow3.caf; sourceTree = "<group>"; };
+		F8B3A7BA226CC0B7004BA588 /* bruteforce.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = bruteforce.caf; sourceTree = "<group>"; };
+		F8B3A7BB226CC0B7004BA588 /* modern2.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = modern2.caf; sourceTree = "<group>"; };
+		F8B3A7BC226CC0B7004BA588 /* shortlow1.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shortlow1.caf; sourceTree = "<group>"; };
+		F8B3A7BD226CC0B7004BA588 /* shortlow4.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shortlow4.caf; sourceTree = "<group>"; };
+		F8B3A7BE226CC0B7004BA588 /* shorthigh1.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shorthigh1.caf; sourceTree = "<group>"; };
+		F8B3A7BF226CC0B7004BA588 /* shorthigh3.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shorthigh3.caf; sourceTree = "<group>"; };
+		F8B3A7C0226CC0B7004BA588 /* shorthigh2.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shorthigh2.caf; sourceTree = "<group>"; };
+		F8B3A7C1226CC0B7004BA588 /* shorthigh4.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = shorthigh4.caf; sourceTree = "<group>"; };
+		F8B3A7C2226CC0B7004BA588 /* modernalarm.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = modernalarm.caf; sourceTree = "<group>"; };
+		F8B3A7C3226CC0B7004BA588 /* betterwakeup.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = betterwakeup.caf; sourceTree = "<group>"; };
+		F8B3A7C4226CC0B7004BA588 /* spaceship.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = spaceship.caf; sourceTree = "<group>"; };
 		F8B3A7C5226CC0B7004BA588 /* xdripalert.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = xdripalert.aif; sourceTree = "<group>"; };
 		F8B3A7DE226E48C1004BA588 /* SoundPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
 		F8B3A7F22278E0E7004BA588 /* SettingsViewModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewModelProtocol.swift; sourceTree = "<group>"; };
@@ -1602,13 +1582,6 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		2F95F647D357FD5C1665313D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		470B618E270C448100561E56 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2299,7 +2272,6 @@
 				F8AC425A21ADEBD60078C348 /* xdrip.app */,
 				F870D3D125126A49008967B0 /* xDrip4iOS Widget.appex */,
 				470B6186270C448000561E56 /* xDrip4iO5.app */,
-				470B6191270C448100561E56 /* Watch App WatchKit Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2462,20 +2434,20 @@
 				F824373E24CB7A8F00BED341 /* Wake_Up_Will_You.caf */,
 				F824372324CB7A8900BED341 /* Win_Gain.caf */,
 				F824373124CB7A8D00BED341 /* Wrong_Answer.caf */,
-				F821CF7C22A46CDD005C1E43 /* 1-millisecond-of-silence.mp3 */,
-				F8B3A7C3226CC0B7004BA588 /* betterwakeup.mp3 */,
-				F8B3A7BA226CC0B7004BA588 /* bruteforce.mp3 */,
-				F8B3A7BB226CC0B7004BA588 /* modern2.mp3 */,
-				F8B3A7C2226CC0B7004BA588 /* modernalarm.mp3 */,
-				F8B3A7BE226CC0B7004BA588 /* shorthigh1.mp3 */,
-				F8B3A7C0226CC0B7004BA588 /* shorthigh2.mp3 */,
-				F8B3A7BF226CC0B7004BA588 /* shorthigh3.mp3 */,
-				F8B3A7C1226CC0B7004BA588 /* shorthigh4.mp3 */,
-				F8B3A7BC226CC0B7004BA588 /* shortlow1.mp3 */,
-				F8B3A7B8226CC0B7004BA588 /* shortlow2.mp3 */,
-				F8B3A7B9226CC0B7004BA588 /* shortlow3.mp3 */,
-				F8B3A7BD226CC0B7004BA588 /* shortlow4.mp3 */,
-				F8B3A7C4226CC0B7004BA588 /* spaceship.mp3 */,
+				F821CF7C22A46CDD005C1E43 /* 1-millisecond-of-silence.caf */,
+				F8B3A7C3226CC0B7004BA588 /* betterwakeup.caf */,
+				F8B3A7BA226CC0B7004BA588 /* bruteforce.caf */,
+				F8B3A7BB226CC0B7004BA588 /* modern2.caf */,
+				F8B3A7C2226CC0B7004BA588 /* modernalarm.caf */,
+				F8B3A7BE226CC0B7004BA588 /* shorthigh1.caf */,
+				F8B3A7C0226CC0B7004BA588 /* shorthigh2.caf */,
+				F8B3A7BF226CC0B7004BA588 /* shorthigh3.caf */,
+				F8B3A7C1226CC0B7004BA588 /* shorthigh4.caf */,
+				F8B3A7BC226CC0B7004BA588 /* shortlow1.caf */,
+				F8B3A7B8226CC0B7004BA588 /* shortlow2.caf */,
+				F8B3A7B9226CC0B7004BA588 /* shortlow3.caf */,
+				F8B3A7BD226CC0B7004BA588 /* shortlow4.caf */,
+				F8B3A7C4226CC0B7004BA588 /* spaceship.caf */,
 			);
 			path = sounds;
 			sourceTree = "<group>";
@@ -3208,35 +3180,17 @@
 			buildConfigurationList = 470B61A9270C448200561E56 /* Build configuration list for PBXNativeTarget "Watch App" */;
 			buildPhases = (
 				470B6184270C448000561E56 /* Resources */,
-				470B61A5270C448200561E56 /* Embed App Extensions */,
 				2F95F647D357FD5C1665313D /* Frameworks */,
+				470B618D270C448100561E56 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				470B6194270C448100561E56 /* PBXTargetDependency */,
 			);
 			name = "Watch App";
 			productName = "Watch App";
 			productReference = 470B6186270C448000561E56 /* xDrip4iO5.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		470B6190270C448100561E56 /* Watch App WatchKit Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 470B61A8270C448200561E56 /* Build configuration list for PBXNativeTarget "Watch App WatchKit Extension" */;
-			buildPhases = (
-				470B618D270C448100561E56 /* Sources */,
-				470B618E270C448100561E56 /* Frameworks */,
-				470B618F270C448100561E56 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Watch App WatchKit Extension";
-			productName = "Watch App WatchKit Extension";
-			productReference = 470B6191270C448100561E56 /* Watch App WatchKit Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
+			productType = "com.apple.product-type.application";
 		};
 		F870D3D025126A49008967B0 /* xDrip4iOS Widget */ = {
 			isa = PBXNativeTarget;
@@ -3262,7 +3216,7 @@
 				F8AC425621ADEBD60078C348 /* Sources */,
 				F8AC425721ADEBD60078C348 /* Frameworks */,
 				F8AC425821ADEBD60078C348 /* Resources */,
-				F870D3DE25126A49008967B0 /* Embed App Extensions */,
+				F870D3DE25126A49008967B0 /* Embed Foundation Extensions */,
 				470B61A2270C448200561E56 /* Embed Watch Content */,
 				470824D4297484B500C52317 /* Embed Frameworks */,
 			);
@@ -3289,15 +3243,13 @@
 		F8AC425221ADEBD60078C348 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				DefaultBuildSystemTypeForWorkspace = Original;
 				LastSwiftUpdateCheck = 1310;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1500;
 				ORGANIZATIONNAME = "Johan Degraeve";
 				TargetAttributes = {
 					470B6185270C448000561E56 = {
-						CreatedOnToolsVersion = 13.0;
-					};
-					470B6190270C448100561E56 = {
 						CreatedOnToolsVersion = 13.0;
 					};
 					F870D3D025126A49008967B0 = {
@@ -3356,7 +3308,6 @@
 				F8AC425921ADEBD60078C348 /* xdrip */,
 				F870D3D025126A49008967B0 /* xDrip4iOS Widget */,
 				470B6185270C448000561E56 /* Watch App */,
-				470B6190270C448100561E56 /* Watch App WatchKit Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -3367,15 +3318,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				470B618C270C448100561E56 /* Assets.xcassets in Resources */,
-				470B618A270C448000561E56 /* Interface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		470B618F270C448100561E56 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 				470B619D270C448200561E56 /* Assets.xcassets in Resources */,
+				470B618A270C448000561E56 /* Interface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3431,7 +3375,7 @@
 				F8BDD448221C9D70006EAB84 /* ErrorMessages.strings in Resources */,
 				F82437CE24CB7A9900BED341 /* Cartoon_Ascend_Climb_Sneaky.caf in Resources */,
 				F824379F24CB7A9900BED341 /* Sci-Fi_Incoming_Message_Alert.caf in Resources */,
-				F8B3A7C9226CC0B7004BA588 /* modern2.mp3 in Resources */,
+				F8B3A7C9226CC0B7004BA588 /* modern2.caf in Resources */,
 				F82437CD24CB7A9900BED341 /* Dhol_Shuffleloop.caf in Resources */,
 				F824379024CB7A9900BED341 /* CSFX-2_Alarm.caf in Resources */,
 				F82437CB24CB7A9900BED341 /* Orchestral_Horns.caf in Resources */,
@@ -3440,17 +3384,17 @@
 				F82437B824CB7A9900BED341 /* Cuckoo_Clock.caf in Resources */,
 				F82437A224CB7A9900BED341 /* Sci-Fi_Eerie_Alarm.caf in Resources */,
 				F824379524CB7A9900BED341 /* Pager_Beeps.caf in Resources */,
-				F8B3A7CD226CC0B7004BA588 /* shorthigh3.mp3 in Resources */,
+				F8B3A7CD226CC0B7004BA588 /* shorthigh3.caf in Resources */,
 				F824376A24CB7A9800BED341 /* Martian_Gun.caf in Resources */,
 				F824378824CB7A9900BED341 /* Insistently.caf in Resources */,
 				F82437B924CB7A9900BED341 /* Siri_Alert_Transmitter_Battery_Low.caf in Resources */,
-				F8B3A7D0226CC0B7004BA588 /* modernalarm.mp3 in Resources */,
-				F8B3A7C8226CC0B7004BA588 /* bruteforce.mp3 in Resources */,
-				F8B3A7C6226CC0B7004BA588 /* shortlow2.mp3 in Resources */,
-				F8B3A7CA226CC0B7004BA588 /* shortlow1.mp3 in Resources */,
+				F8B3A7D0226CC0B7004BA588 /* modernalarm.caf in Resources */,
+				F8B3A7C8226CC0B7004BA588 /* bruteforce.caf in Resources */,
+				F8B3A7C6226CC0B7004BA588 /* shortlow2.caf in Resources */,
+				F8B3A7CA226CC0B7004BA588 /* shortlow1.caf in Resources */,
 				F824379324CB7A9900BED341 /* Martian_Scanner.caf in Resources */,
 				F824379124CB7A9900BED341 /* Sci-Fi_Computer_Console_Alarm.caf in Resources */,
-				F8B3A7D1226CC0B7004BA588 /* betterwakeup.mp3 in Resources */,
+				F8B3A7D1226CC0B7004BA588 /* betterwakeup.caf in Resources */,
 				F824376C24CB7A9800BED341 /* Chimes_Glassy.caf in Resources */,
 				F82437A524CB7A9900BED341 /* Cartoon_Machine_Clumsy_Loop.caf in Resources */,
 				F82437A324CB7A9900BED341 /* Siri_Alert_Glucose_Dropping_Fast.caf in Resources */,
@@ -3476,11 +3420,11 @@
 				F82437C124CB7A9900BED341 /* Emergency_Alarm_Carbon_Monoxide.caf in Resources */,
 				F824377B24CB7A9800BED341 /* Emergency_Alarm.caf in Resources */,
 				F82437A724CB7A9900BED341 /* Alarm_Clock.caf in Resources */,
-				F8B3A7C7226CC0B7004BA588 /* shortlow3.mp3 in Resources */,
+				F8B3A7C7226CC0B7004BA588 /* shortlow3.caf in Resources */,
 				F82437B324CB7A9900BED341 /* Rush.caf in Resources */,
 				F82437A024CB7A9900BED341 /* Siri_Missed_Readings.caf in Resources */,
 				F824377924CB7A9800BED341 /* Sci-Fi_Alarm_Loop_3.caf in Resources */,
-				F8B3A7CB226CC0B7004BA588 /* shortlow4.mp3 in Resources */,
+				F8B3A7CB226CC0B7004BA588 /* shortlow4.caf in Resources */,
 				4749EB9B25B36E010072DF8B /* LibreNFC.strings in Resources */,
 				F82437C624CB7A9900BED341 /* Siri_Alert_High_Glucose.caf in Resources */,
 				F82437A924CB7A9900BED341 /* Wake_Up_Will_You.caf in Resources */,
@@ -3507,17 +3451,17 @@
 				F824379824CB7A9900BED341 /* Not_Kiddin.caf in Resources */,
 				F824378E24CB7A9900BED341 /* Win_Gain.caf in Resources */,
 				F824378624CB7A9900BED341 /* Alien_Siren.caf in Resources */,
-				F8B3A7CF226CC0B7004BA588 /* shorthigh4.mp3 in Resources */,
+				F8B3A7CF226CC0B7004BA588 /* shorthigh4.caf in Resources */,
 				F824378224CB7A9900BED341 /* Cartoon_Villain_Horns.caf in Resources */,
 				F824379724CB7A9900BED341 /* Siri_Transmitter_Battery_Low.caf in Resources */,
 				F82437AE24CB7A9900BED341 /* Cell_Phone_Ring_Tone.caf in Resources */,
 				F82437C824CB7A9900BED341 /* Siri_Alert_Missed_Readings.caf in Resources */,
 				47046EA72A6E8F7B00A6F736 /* BgReadings.strings in Resources */,
-				F821CF7D22A46CDD005C1E43 /* 1-millisecond-of-silence.mp3 in Resources */,
+				F821CF7D22A46CDD005C1E43 /* 1-millisecond-of-silence.caf in Resources */,
 				F824377A24CB7A9800BED341 /* Sci-Fi_Spaceship_Message.caf in Resources */,
 				D4AC54502778C82C0097FF10 /* Treatments.strings in Resources */,
 				F824377124CB7A9800BED341 /* Indeed.caf in Resources */,
-				F8B3A7CE226CC0B7004BA588 /* shorthigh2.mp3 in Resources */,
+				F8B3A7CE226CC0B7004BA588 /* shorthigh2.caf in Resources */,
 				F82437D224CB7A9900BED341 /* Remembers_Me_Of_Asia.caf in Resources */,
 				F824378F24CB7A9900BED341 /* Siri_Alert_Glucose_Rising_Fast.caf in Resources */,
 				F824378A24CB7A9900BED341 /* Two_Turtle_Doves.caf in Resources */,
@@ -3529,7 +3473,7 @@
 				F821CF7F22A4EDCF005C1E43 /* 20ms-of-silence.caf in Resources */,
 				F82437D324CB7A9900BED341 /* Soft_Marimba_Pad_Positive.caf in Resources */,
 				F824379924CB7A9900BED341 /* Magical_Twinkle.caf in Resources */,
-				F8B3A7CC226CC0B7004BA588 /* shorthigh1.mp3 in Resources */,
+				F8B3A7CC226CC0B7004BA588 /* shorthigh1.caf in Resources */,
 				F824377824CB7A9800BED341 /* Sci-Fi_Alarm_Loop_2.caf in Resources */,
 				F824378424CB7A9900BED341 /* Early_Sunrise.caf in Resources */,
 				F82437C524CB7A9900BED341 /* Marching_Heavy_Footed_Fat_Elephants.caf in Resources */,
@@ -3540,7 +3484,7 @@
 				F8AC426521ADEBD60078C348 /* Main.storyboard in Resources */,
 				F8B48AA422B2FA9B009BCC01 /* CalibrationRequest.strings in Resources */,
 				F8B3A7B5226A0A71004BA588 /* Alerts.strings in Resources */,
-				F8B3A7D2226CC0B7004BA588 /* spaceship.mp3 in Resources */,
+				F8B3A7D2226CC0B7004BA588 /* spaceship.caf in Resources */,
 				F82437B224CB7A9900BED341 /* Burglar_Alarm_Siren_2.caf in Resources */,
 				F82437BD24CB7A9900BED341 /* Sci-Fi_Spaceship_Warm_Up.caf in Resources */,
 				F824378D24CB7A9900BED341 /* Soft_Warm_Airy_Reassuring.caf in Resources */,
@@ -3959,11 +3903,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		470B6194270C448100561E56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 470B6190270C448100561E56 /* Watch App WatchKit Extension */;
-			targetProxy = 470B6193270C448100561E56 /* PBXContainerItemProxy */;
-		};
 		470B61A0270C448200561E56 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 470B6185270C448000561E56 /* Watch App */;
@@ -4607,6 +4546,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "$(XDRIP_CODE_SIGN_IDENTITY_DEBUG)";
@@ -4614,9 +4554,14 @@
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(XDRIP_DEVELOPMENT_TEAM)";
 				GENERATE_INFOPLIST_FILE = YES;
-				IBSC_MODULE = Watch_App_WatchKit_Extension;
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Johan Degraeve. All rights reserved.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "$(MAIN_APP_BUNDLE_IDENTIFIER)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MAIN_APP_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER)";
 				MARKETING_VERSION = "$(XDRIP_MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER).watchkitapp";
@@ -4635,6 +4580,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "$(XDRIP_CODE_SIGN_IDENTITY_RELEASE)";
@@ -4642,77 +4588,18 @@
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(XDRIP_DEVELOPMENT_TEAM)";
 				GENERATE_INFOPLIST_FILE = YES;
-				IBSC_MODULE = Watch_App_WatchKit_Extension;
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Johan Degraeve. All rights reserved.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "$(MAIN_APP_BUNDLE_IDENTIFIER)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MAIN_APP_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER)";
 				MARKETING_VERSION = "$(XDRIP_MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER).watchkitapp";
 				PRODUCT_NAME = "$(MAIN_APP_DISPLAY_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
-			};
-			name = Release;
-		};
-		470B61A6270C448200561E56 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
-				DEVELOPMENT_TEAM = "$(XDRIP_DEVELOPMENT_TEAM)";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Watch App WatchKit Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = xDrip4iO5;
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Johan Degraeve. All rights reserved.";
-				INFOPLIST_KEY_WKExtensionDelegateClassName = Watch_App_WatchKit_Extension.ExtensionDelegate;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MAIN_APP_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER)";
-				MARKETING_VERSION = "$(XDRIP_MARKETING_VERSION)";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER).watchkitapp.watchkitextension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
-			};
-			name = Debug;
-		};
-		470B61A7270C448200561E56 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
-				DEVELOPMENT_TEAM = "$(XDRIP_DEVELOPMENT_TEAM)";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Watch App WatchKit Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = xDrip4iO5;
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Johan Degraeve. All rights reserved.";
-				INFOPLIST_KEY_WKExtensionDelegateClassName = Watch_App_WatchKit_Extension.ExtensionDelegate;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MAIN_APP_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER)";
-				MARKETING_VERSION = "$(XDRIP_MARKETING_VERSION)";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER).watchkitapp.watchkitextension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4812,6 +4699,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -4879,6 +4767,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -4959,15 +4848,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		470B61A8270C448200561E56 /* Build configuration list for PBXNativeTarget "Watch App WatchKit Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				470B61A6270C448200561E56 /* Debug */,
-				470B61A7270C448200561E56 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		470B61A9270C448200561E56 /* Build configuration list for PBXNativeTarget "Watch App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
