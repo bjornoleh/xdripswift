@@ -55,9 +55,9 @@ platform :ios do
       type: "appstore",
       git_basic_authorization: Base64.strict_encode64("#{GITHUB_REPOSITORY_OWNER}:#{GH_PAT}"),
       app_identifier: [
-        "com.#{TEAMID}.xdripswift",
-        "com.#{TEAMID}.xdripswift.xDrip4iOS-Widget",
-        "com.#{TEAMID}.xdripswift.watchkitapp"
+        "com.#{TEAMID}.xdripswift3",
+        "com.#{TEAMID}.xdripswift3.xDrip4iOS-Widget",
+        "com.#{TEAMID}.xdripswift3.watchkitapp"
       ]
     )
 
@@ -179,9 +179,9 @@ platform :ios do
       force: true,
       git_basic_authorization: Base64.strict_encode64("#{GITHUB_REPOSITORY_OWNER}:#{GH_PAT}"),
       app_identifier: [
-        "com.#{TEAMID}.xdripswift",
-        "com.#{TEAMID}.xdripswift.xDrip4iOS-Widget",
-        "com.#{TEAMID}.xdripswift.watchkitapp"
+        "com.#{TEAMID}.xdripswift3",
+        "com.#{TEAMID}.xdripswift3.xDrip4iOS-Widget",
+        "com.#{TEAMID}.xdripswift3.watchkitapp"
       ]
     )
   end
@@ -201,7 +201,7 @@ platform :ios do
       bundle_id = Spaceship::ConnectAPI::BundleId.find(identifier)
     end
 
-    find_bundle_id("com.#{TEAMID}.xdripswift")
+    find_bundle_id("com.#{TEAMID}.xdripswift3")
 
     match(
       type: "appstore",
