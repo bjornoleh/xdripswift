@@ -176,8 +176,13 @@ public class AlertManager:NSObject {
                     
                 }
                 
-                // the missed reading alert will be a future planned alert
-                _ = checkAlertAndFireHelper(.missedreading)
+                // don't set this alert if it is in follower mode without an active sensor or if keep alive is disabled
+                if UserDefaults.standard.isMaster || (!UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType != .disabled && UserDefaults.standard.activeSensorStartDate != nil) {
+                    
+                    // the missed reading alert will be a future planned alert
+                    _ = checkAlertAndFireHelper(.missedreading)
+                    
+                }
                 
             } else {
                 trace("in checkAlerts, latestBgReadings is older than %{public}@ minutes", log: self.log, category: ConstantsLog.categoryAlertManager, type: .info, maxAgeOfLastBgReadingInSeconds.description)
@@ -348,7 +353,7 @@ public class AlertManager:NSObject {
                                         // schedule missed reading alert with same content
                                         self.scheduleMissedReadingAlert(snoozePeriodInMinutes: snoozePeriod, content: content)
 
-                                    } else {
+                                    } else if UserDefaults.standard.isMaster || (!UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType != .disabled && UserDefaults.standard.activeSensorStartDate != nil) {
                                         
                                         _ = self.checkAlertAndFire(alertKind: .missedreading, lastBgReading: nil, lastButOneBgREading: nil, lastCalibration: nil, transmitterBatteryInfo: nil)
                                         
@@ -389,9 +394,12 @@ public class AlertManager:NSObject {
         if alertKind == .missedreading {
             
             if let response = response {
-                
-                scheduleMissedReadingAlert(snoozePeriodInMinutes: snoozePeriodInMinutes, content: response.notification.request.content)
-                
+             
+                if UserDefaults.standard.isMaster || (!UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType.rawValue > 0 && UserDefaults.standard.activeSensorStartDate != nil) {
+                    
+                    scheduleMissedReadingAlert(snoozePeriodInMinutes: snoozePeriodInMinutes, content: response.notification.request.content)
+                    
+                }
             }
             
         } else {
@@ -559,7 +567,8 @@ public class AlertManager:NSObject {
             
         }
         
-        if alertNeeded {
+        if alertNeeded && (UserDefaults.standard.isMaster || (!UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType != .disabled && UserDefaults.standard.activeSensorStartDate != nil)) {
+            
             // alert needs to be raised
             
             // the applicable alertentry
@@ -721,7 +730,16 @@ public class AlertManager:NSObject {
             return true
             
         } else {
-            trace("in checkAlert, there's no need to raise alert %{public}@", log: self.log, category: ConstantsLog.categoryAlertManager, type: .info, alertKind.descriptionForLogging())
+            
+            if !UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType != .disabled && UserDefaults.standard.activeSensorStartDate != nil {
+                
+                trace("in checkAlert, there's no need to raise alert %{public}@ because we're in follower mode and keep-alive is disabled", log: self.log, category: ConstantsLog.categoryAlertManager, type: .info, alertKind.descriptionForLogging())
+                
+            } else {
+                
+                trace("in checkAlert, there's no need to raise alert %{public}@", log: self.log, category: ConstantsLog.categoryAlertManager, type: .info, alertKind.descriptionForLogging())
+                
+            }
             return false
         }
     }
