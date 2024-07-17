@@ -84,6 +84,9 @@ enum CGMTransmitterType:String, CaseIterable {
     /// dexcom G5, G6
     case dexcom = "Dexcom"
     
+    /// dexcom G7
+    case dexcomG7 = "Dexcom G7"
+    
     /// miaomiao
     case miaomiao = "MiaoMiao"
     
@@ -116,7 +119,7 @@ enum CGMTransmitterType:String, CaseIterable {
         
         switch self {
             
-        case .dexcomG4, .dexcom:
+        case .dexcomG4, .dexcom, .dexcomG7:
             return .Dexcom
             
         case .miaomiao, .Bubble, .GNSentry, .Droplet1, .blueReader, .watlaa, .Blucon, .Libre2, .Atom:
@@ -167,6 +170,9 @@ enum CGMTransmitterType:String, CaseIterable {
         case .Atom:
             return true
             
+        case .dexcomG7:
+            return true
+            
         }
     }
     
@@ -182,7 +188,9 @@ enum CGMTransmitterType:String, CaseIterable {
             
         case .miaomiao, .Bubble, .Blucon, .Libre2, .Atom:
             return true
-        
+            
+        case .dexcomG7:
+            return false
         
         }
     }
@@ -224,6 +232,10 @@ enum CGMTransmitterType:String, CaseIterable {
         case .Atom:
             return ConstantsDefaultAlertLevels.defaultBatteryAlertLevelAtom
             
+        case .dexcomG7:
+            // we don't use this
+            return ConstantsDefaultAlertLevels.defaultBatteryAlertLevelDexcomG5
+            
         }
     }
     
@@ -238,7 +250,7 @@ enum CGMTransmitterType:String, CaseIterable {
             return ""
             
         case .dexcom:
-            return "voltA"
+            return "voltB"
             
         case .miaomiao, .Bubble, .Droplet1:
             return "%"
@@ -261,6 +273,10 @@ enum CGMTransmitterType:String, CaseIterable {
         case .Atom:
             return "%"
             
+        case .dexcomG7:
+            // we don't use this
+            return ""
+            
         }
     }
     
@@ -282,11 +298,11 @@ enum CGMTransmitterType:String, CaseIterable {
                     
                 } else if transmitterIdString.startsWith("5") {
                     
-                    return "Dexcom One (5xxxxx)"
+                    return "Dexcom ONE"
                     
                 } else if transmitterIdString.startsWith("C") {
                     
-                    return "Dexcom One"
+                    return "Dexcom ONE"
                     
                 }
                 
@@ -294,8 +310,20 @@ enum CGMTransmitterType:String, CaseIterable {
             
             return "Dexcom"
             
+        case .dexcomG7:
+            if let transmitterIdString = UserDefaults.standard.activeSensorTransmitterId {
+                if transmitterIdString.startsWith("DX02") {
+                    return "Dexcom ONE+"
+                }
+            }
+            return "Dexcom G7"
+            
         case .Libre2:
-            return "Libre 2 Direct"
+            if let activeSensorMaxSensorAgeInDays = UserDefaults.standard.activeSensorMaxSensorAgeInDays, activeSensorMaxSensorAgeInDays >= 15 {
+                return "Libre 2 Plus"
+            } else {
+                return "Libre 2"
+            }
             
         default:
             return self.rawValue

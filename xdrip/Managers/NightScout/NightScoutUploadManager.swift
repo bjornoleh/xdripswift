@@ -1,7 +1,6 @@
 import Foundation
 import os
 import UIKit
-import xDrip4iOS_Widget
 
 public class NightScoutUploadManager: NSObject, ObservableObject {
     
@@ -105,10 +104,10 @@ public class NightScoutUploadManager: NSObject, ObservableObject {
         // and nightScoutUrl exists
         guard UserDefaults.standard.nightScoutEnabled, UserDefaults.standard.nightScoutUrl != nil else {return}
 
-        // TODO: crash here
-        trace("    setting nightScoutSyncTreatmentsRequired to true, this will also initiate a treatments sync", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .info)
-        
-        DispatchQueue.main.async {
+        if (UserDefaults.standard.timeStampLatestNightScoutTreatmentSyncRequest ?? Date.distantPast).timeIntervalSinceNow < -ConstantsNightScout.minimiumTimeBetweenTwoTreatmentSyncsInSeconds {
+            trace("    setting nightScoutSyncTreatmentsRequired to true, this will also initiate a treatments sync", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .info)
+            
+            UserDefaults.standard.timeStampLatestNightScoutTreatmentSyncRequest = .now
             UserDefaults.standard.nightScoutSyncTreatmentsRequired = true
         }
         
@@ -164,22 +163,15 @@ public class NightScoutUploadManager: NSObject, ObservableObject {
     }
     
     /// synchronize treatments with NightScout
-    public func syncTreatmentsWithNightScout() {
+    private func syncTreatmentsWithNightScout() {
         
         // check that NightScout is enabled
         // and nightScoutUrl exists
         guard UserDefaults.standard.nightScoutEnabled, UserDefaults.standard.nightScoutUrl != nil else {return}
 
-        // if schedule is on, check if Nightscout is enabled according to schedule
-        // if app is in foreground then overrule this setting - if the app is in the foreground, then probably it's not the aim to save battery (which is the reason why the schedule is useful) - and if the app is in the foreground, user probably wants to see treatments added by other app (eg Loop), even if nightScout schedule says to not schedule
-        if UserDefaults.standard.nightScoutUseSchedule && !UserDefaults.standard.appInForeGround {
-            if let schedule = UserDefaults.standard.nightScoutSchedule {
-                if !schedule.indicatesOn(forWhen: Date()) {
-                    return
-                }
-            }
-        }
-
+        // no sync needed if app is running in the background
+        //guard UserDefaults.standard.appInForeGround else {return}
+        
         // if sync already running, then set nightScoutTreatmentSyncRequired to true
         // sync is running already, once stopped it will rerun
         if let nightScoutTreatmentsSyncStartTimeStamp = nightScoutTreatmentsSyncStartTimeStamp {
@@ -440,13 +432,8 @@ public class NightScoutUploadManager: NSObject, ObservableObject {
                         guard UserDefaults.standard.nightScoutSyncTreatmentsRequired else {return}
                         
                         UserDefaults.standard.nightScoutSyncTreatmentsRequired = false
-                        
-                        // if Nightscout is enabled, then a nightscout sync is required
-                        if UserDefaults.standard.nightScoutEnabled {
                             
-                            syncTreatmentsWithNightScout()
-                            
-                        }
+                        syncTreatmentsWithNightScout()
                         
                     }
                     
@@ -1525,6 +1512,15 @@ public class NightScoutUploadManager: NSObject, ObservableObject {
         
         return numberOfNewTreatments
         
+    }
+    
+    // set the flag to sync Nightscout treatments if a short time has passed since the last time 
+    // as accessing userdefaults is not thread-safe
+    private func setNightscoutSyncTreatmentsRequiredToTrue() {        
+        if (UserDefaults.standard.timeStampLatestNightScoutTreatmentSyncRequest ?? Date.distantPast).timeIntervalSinceNow < -ConstantsNightScout.minimiumTimeBetweenTwoTreatmentSyncsInSeconds {
+            UserDefaults.standard.timeStampLatestNightScoutTreatmentSyncRequest = .now
+            UserDefaults.standard.nightScoutSyncTreatmentsRequired = true
+        }
     }
     
 }

@@ -61,6 +61,10 @@ class Texts_Common {
         return NSLocalizedString("common_hours", tableName: filename, bundle: Bundle.main, value: "hours", comment: "literal translation needed")
     }()
     
+    static let minuteshort = {
+        return NSLocalizedString("common_minuteshort", tableName: filename, bundle: Bundle.main, value: "m", comment: "literal translation needed")
+    }()
+    
     static let minutes = {
         return NSLocalizedString("common_minutes", tableName: filename, bundle: Bundle.main, value: "mins", comment: "literal translation needed")
     }()
@@ -212,5 +216,13 @@ class Texts_Common {
     
     static let dontShowAgain = {
         return NSLocalizedString("common_dontshowagain", tableName: filename, bundle: Bundle.main, value: "Don't Show Again", comment: "don't show again")
+    }()
+    
+    static let enabled = {
+        return NSLocalizedString("common_enabled", tableName: filename, bundle: Bundle.main, value: "Enabled", comment: "enabled")
+    }()
+    
+    static let disabled = {
+        return NSLocalizedString("common_disabled", tableName: filename, bundle: Bundle.main, value: "Disabled", comment: "disabled")
     }()
 }

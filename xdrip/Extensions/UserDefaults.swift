@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import ActivityKit
 
 extension UserDefaults {
     
@@ -70,6 +71,10 @@ extension UserDefaults {
         case multipleAppBadgeValueWith10 = "multipleAppBadgeValueWith10"
         /// minimum time between two notifications, set by user
         case notificationInterval = "notificationInterval"
+        /// which type of live activities should be shown?
+        case liveActivityType = "liveActivityType"
+        /// which size should the live activities be shown?
+        case liveActivitySize = "liveActivitySize"
         
         // Home Screen and main chart settings
         
@@ -83,8 +88,6 @@ extension UserDefaults {
         case showClockWhenScreenIsLocked = "showClockWhenScreenIsLocked"
         /// how (and if) the screen should be dimmed when screen lock is enabled
         case screenLockDimmingType = "screenLockDimmingType"
-        /// show the objectives and make them display on the graph? Or just hide it all because it's too complicated to waste time with?
-        case useObjectives = "useObjectives"
         /// show the objective lines in color or grey?
         case urgentHighMarkValue = "urgentHighMarkValue"
         /// high value
@@ -97,6 +100,8 @@ extension UserDefaults {
         case showTarget = "showTarget"
         /// target value
         case targetMarkValue = "targetMarkValue"
+        
+        
         
         // Treatment settings
         
@@ -132,6 +137,13 @@ extension UserDefaults {
         /// use the newer TITR of 70-140mg/dL to calculate the statistics? If false, we will use the conventional TIR of 70-180mg/dL
         case useTITRStatisticsRange = "useTITRStatisticsRange"
 
+        // Alert settings
+        
+        /// when did the user snooze all alarms
+        case snoozeAllAlertsFromDate = "snoozeAllAlertsFromDate"
+        /// for how long did the user snooze all alarms
+        case snoozeAllAlertsUntilDate = "snoozeAllAlertsUntilDate"
+        
         // Housekeeper settings
 
         /// For how many days should we keep Readings, Treatments and Calibrations?
@@ -256,6 +268,19 @@ extension UserDefaults {
         
         // Apple Watch
         
+        /// enable the Watch complications
+        case showDataInWatchComplications = "showDataInWatchComplications"
+        /// timestamp that the user acknowledged that the complications will not show in real-time
+        case watchComplicationUserAgreementDate = "watchComplicationUserAgreementDate"
+        /// how many complication updates are remaining for the current day
+        case forceComplicationUpdateInMinutes = "forceComplicationUpdateInMinutes"
+        /// how many complication updates are remaining for the current day
+        case remainingComplicationUserInfoTransfers = "remainingComplicationUserInfoTransfers"
+        /// force a complication update
+        case forceComplicationUpdate = "forceComplicationUpdate"
+        
+        // Calendar Events
+        
         /// create calendar event yes or no
         case createCalendarEvent = "createCalendarEvent"
         
@@ -275,7 +300,14 @@ extension UserDefaults {
         /// should a visual coloured indicator be shown in the calendar title yes or no
         case displayVisualIndicatorInCalendarEvent = "displayVisualIndicator"
         
+        // Contact image
         
+        /// enable contact image yes or no
+        case enableContactImage = "enableContactImage"
+        /// should trend be displayed yes or no
+        case displayTrendInContactImage = "displayTrendInContactImage"
+        
+
         // Other Settings (not user configurable)
         
         /// - in case missed reading alert settings are changed by user, this value will be set to true
@@ -287,6 +319,8 @@ extension UserDefaults {
         // Nightscout
         /// timestamp lastest reading uploaded to NightScout
         case timeStampLatestNSUploadedBgReadingToNightScout = "timeStampLatestUploadedBgReading"
+        /// timestamp lastest treatment sync request to NightScout
+        case timeStampLatestNightScoutTreatmentSyncRequest = "timeStampLatestNightScoutTreatmentSyncRequest"
         /// timestamp latest calibration uploaded to NightScout
         case timeStampLatestNSUploadedCalibrationToNightScout = "timeStampLatestUploadedCalibration"
         
@@ -307,14 +341,14 @@ extension UserDefaults {
         /// timestamp of latest reading uploaded to Dexcom Share
         case timeStampLatestDexcomShareUploadedBgReading = "timeStampLatestDexcomShareUploadedBgReading"
         
-        // Loop
-        /// dictionary representation of readings that were shared  with Loop. This is not the json representation, it's an array of dictionary
+        // OS-AID sharing (Loop, iAPS, Trio etc)
+        /// dictionary representation of readings that were shared with Loop (or another OS-AID system using the same method). This is not the json representation, it's an array of dictionary
         case readingsStoredInSharedUserDefaultsAsDictionary = "readingsStoredInSharedUserDefaultsAsDictionary"
             
-        /// timestamp lastest reading shared with Loop
+        /// timestamp lastest reading shared with Loop/OS-AID
         case timeStampLatestLoopSharedBgReading = "timeStampLatestLoopSharedBgReading"
         
-        /// Loop sharing will be limited to just once every 5 minutes if true
+        /// Loop/OS-AID sharing will be limited to just once every 5 minutes if true
         case shareToLoopOnceEvery5Minutes = "shareToLoopOnceEvery5Minutes"
         
 
@@ -339,6 +373,8 @@ extension UserDefaults {
 
         // development settings
         
+        /// show Developer Settings
+        case showDeveloperSettings = "showDeveloperSettings"
         /// G6 factor1 - for testing G6 scaling
         case G6v2ScalingFactor1 = "G6v2ScalingFactor1"
         /// G6 factor2 - for testing G6 scaling
@@ -351,8 +387,8 @@ extension UserDefaults {
         case smoothLibreValues = "smoothLibreValues"
         /// for Libre 2 : suppress sending unlockPayLoad, this will allow to run xDrip4iOS/Libre 2 in parallel with other app(s)
         case suppressUnLockPayLoad = "suppressUnLockPayLoad"
-        /// if true, then readings will not be written to shared user defaults (for loop)
-        case suppressLoopShare = "suppressLoopShare"
+        /// should the BG values be written to a shared app group?
+        case loopShareType = "loopShareType"
         /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
         ///
         /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
@@ -388,6 +424,18 @@ extension UserDefaults {
         
         case setActiveCGM = "setActiveCGM"
         
+        // heartbeat
+        /// the last heartbeat connection timestamp
+        case timeStampOfLastHeartBeat = "timeStampOfLastHeartBeat"
+        /// how many seconds since the last heartbeat before we raise a disconnection warning
+        case secondsUntilHeartBeatDisconnectWarning = "secondsUntilHeartBeatDisconnectWarning"
+        
+        // snooze
+        /// used by the observer in RVC to update the UI for the snooze status
+        case updateSnoozeStatus = "updateSnoozeStatus"
+        
+        /// should the app allow a high contrast mode for the .systemSmall widget when shown in StandBy mode at night?
+        case allowStandByHighContrast = "allowStandByHighContrast"
     }
     
     
@@ -538,27 +586,6 @@ extension UserDefaults {
         }
     }
     
-    /// LibreLinkUp version
-    @objc dynamic var libreLinkUpVersion: String? {
-        get {
-            var returnValue = string(forKey: Key.libreLinkUpVersion.rawValue)
-            
-            // if nil set to defaultvalue
-            if returnValue == nil {
-                
-                set(ConstantsLibreLinkUp.libreLinkUpVersionDefault, forKey: Key.libreLinkUpVersion.rawValue)
-                
-                returnValue = string(forKey: Key.libreLinkUpVersion.rawValue)
-                
-            }
-
-            return returnValue
-        }
-        set {
-            set(newValue, forKey: Key.libreLinkUpVersion.rawValue)
-        }
-    }
-    
     /// keep track of if the terms of use must be re-accepted true or false, default false
     @objc dynamic var libreLinkUpReAcceptNeeded: Bool {
         get {
@@ -618,30 +645,6 @@ extension UserDefaults {
             set(newValue, forKey: Key.notificationInterval.rawValue)
         }
     }
-    
-    /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
-    ///
-    /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
-    @objc dynamic var loopDelaySchedule: String? {
-        get {
-            return string(forKey: Key.loopDelaySchedule.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.loopDelaySchedule.rawValue)
-        }
-    }
-
-    /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
-    ///
-    /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
-    @objc dynamic var loopDelayValueInMinutes: String? {
-        get {
-            return string(forKey: Key.loopDelayValueInMinutes.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.loopDelayValueInMinutes.rawValue)
-        }
-    }
 
     /// should reading be shown in app badge yes or no
     @objc dynamic var showReadingInAppBadge: Bool {
@@ -662,6 +665,30 @@ extension UserDefaults {
         }
         set {
             set(!newValue, forKey: Key.multipleAppBadgeValueWith10.rawValue)
+        }
+    }
+    
+    /// holds the enum integer of the type of live activity to be shown
+    /// default to 0 (disabled)
+    var liveActivityType: LiveActivityType {
+        get {
+            let liveActivityTypeAsInt = integer(forKey: Key.liveActivityType.rawValue)
+            return LiveActivityType(rawValue: liveActivityTypeAsInt) ?? .disabled
+        }
+        set {
+            set(newValue.rawValue, forKey: Key.liveActivityType.rawValue)
+        }
+    }
+    
+    /// holds the enum integer of the type of live activity to be shown
+    /// default to 0 (normal)
+    var liveActivitySize: LiveActivitySize {
+        get {
+            let liveActivitySizeAsInt = integer(forKey: Key.liveActivitySize.rawValue)
+            return LiveActivitySize(rawValue: liveActivitySizeAsInt) ?? .normal
+        }
+        set {
+            set(newValue.rawValue, forKey: Key.liveActivitySize.rawValue)
         }
     }
     
@@ -783,10 +810,6 @@ extension UserDefaults {
         get {
             //read currentvalue in mgdl
             var returnValue = double(forKey: Key.targetMarkValue.rawValue)
-            // if 0 set to defaultvalue
-            if returnValue == 0.0 {
-                returnValue = ConstantsBGGraphBuilder.defaultTargetMarkInMgdl
-            }
             if !bloodGlucoseUnitIsMgDl {
                 returnValue = returnValue.mgdlToMmol()
             }
@@ -973,17 +996,6 @@ extension UserDefaults {
         }
     }
     
-    /// should we use objectives for the BG values and graph lines etc?
-    @objc dynamic var useObjectives: Bool {
-        // default value for bool in userdefaults is false, by default we want the objective-based graph to be disabled so as not to scare anybody. They can enable it when they have time to understand it.
-        get {
-            return !bool(forKey: Key.useObjectives.rawValue)
-        }
-        set {
-            set(!newValue, forKey: Key.useObjectives.rawValue)
-        }
-    }
-    
     @objc dynamic var setActiveCGM: Bool {
         get {
             return bool(forKey: Key.setActiveCGM.rawValue)
@@ -1014,8 +1026,6 @@ extension UserDefaults {
             UserDefaults.standard.synchronize()
         }
     }
-
-
 
 
     /// should the target line (always shown in green) be shown on the graph?
@@ -1222,6 +1232,29 @@ extension UserDefaults {
     }
     
     
+    // MARK: Alert Settings
+    
+    /// when did the user snooze all alerts. If this is nil, then the snooze all isn't activated
+    @objc dynamic var snoozeAllAlertsFromDate: Date? {
+        get {
+            return object(forKey: Key.snoozeAllAlertsFromDate.rawValue) as? Date
+        }
+        set {
+            set(newValue, forKey: Key.snoozeAllAlertsFromDate.rawValue)
+        }
+    }
+    
+    /// until when did the user snooze all alerts, can be nil until it's first set but unless snoozeAllAlertsDate != nil we'll ignore this value anyway
+    @objc dynamic var snoozeAllAlertsUntilDate: Date? {
+        get {
+            return object(forKey: Key.snoozeAllAlertsUntilDate.rawValue) as? Date
+        }
+        set {
+            set(newValue, forKey: Key.snoozeAllAlertsUntilDate.rawValue)
+        }
+    }
+    
+    
     // MARK: Sensor Info Settings
     
     /// active sensor serial number. Optional as should be set to nil if no successful login has happened and/or if no active sensor is returned
@@ -1422,6 +1455,16 @@ extension UserDefaults {
         }
     }
     
+    /// timestamp lastest reading uploaded to NightScout
+    var timeStampLatestNightScoutTreatmentSyncRequest: Date? {
+        get {
+            return object(forKey: Key.timeStampLatestNightScoutTreatmentSyncRequest.rawValue) as? Date
+        }
+        set {
+            set(newValue, forKey: Key.timeStampLatestNightScoutTreatmentSyncRequest.rawValue)
+        }
+    }
+    
     /// used to trigger view controllers that there's a change in TreatmentEntries
     ///
     /// value will be increased with 1 each time there's an update
@@ -1605,7 +1648,7 @@ extension UserDefaults {
         }
     }
     
-    // MARK: M5Stack
+    // MARK: - M5Stack
 
     /// M5StackBlePassword, used for authenticating xdrip app towards M5Stack
     var m5StackBlePassword: String? {
@@ -1695,6 +1738,65 @@ extension UserDefaults {
     
     // MARK: - Apple Watch
     
+    /// enable the Watch complications, default false
+    @objc dynamic var showDataInWatchComplications: Bool {
+        get {
+            return bool(forKey: Key.showDataInWatchComplications.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.showDataInWatchComplications.rawValue)
+        }
+    }
+    
+    /// timestamp that the user acknowledged that the complications will not show in real-time
+    var watchComplicationUserAgreementDate: Date? {
+        get {
+            return object(forKey: Key.watchComplicationUserAgreementDate.rawValue) as? Date
+        }
+        set {
+            set(newValue, forKey: Key.watchComplicationUserAgreementDate.rawValue)
+        }
+    }
+    
+    /// every how many minutes should we force a complication update (these updates counts against the 50 times limit per day)
+    var forceComplicationUpdateInMinutes: Int {
+        get {
+            //read currentvalue in mgdl
+            var returnValue = integer(forKey: Key.forceComplicationUpdateInMinutes.rawValue)
+            // if 0 set to defaultvalue
+            if returnValue == 0 {
+                returnValue = ConstantsWidget.defaultForceComplicationRefreshTimeInMinutes
+            }
+            return returnValue
+        }
+        set {
+            set(newValue, forKey: Key.forceComplicationUpdateInMinutes.rawValue)
+        }
+    }
+    
+    /// how many complication updates are remaining for the current day
+    var remainingComplicationUserInfoTransfers: Int? {
+        get {
+            return integer(forKey: Key.remainingComplicationUserInfoTransfers.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.remainingComplicationUserInfoTransfers.rawValue)
+        }
+    }
+    
+    /// force a complication update
+    @objc dynamic var forceComplicationUpdate: Bool {
+        get {
+            return bool(forKey: Key.forceComplicationUpdate.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.forceComplicationUpdate.rawValue)
+        }
+    }
+    
+    
+    // MARK: - Calendar Events
+    
     /// create calendar event yes or no, default false
     @objc dynamic var createCalendarEvent: Bool {
         get {
@@ -1765,7 +1867,28 @@ extension UserDefaults {
         }
     }
     
+    // MARK: - Contact image
+    
+    /// enable the contact image yes or no, default false
+    @objc dynamic var enableContactImage: Bool {
+        get {
+            return bool(forKey: Key.enableContactImage.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.enableContactImage.rawValue)
+        }
+    }
 
+    /// this is for showing readings on watch via the contact image. Should trend be displayed in the contact, yes or no, default no
+    @objc dynamic var displayTrendInContactImage: Bool {
+        get {
+            return bool(forKey: Key.displayTrendInContactImage.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.displayTrendInContactImage.rawValue)
+        }
+    }
+    
     // MARK: - =====  Other Settings ======
     
     /// - in case missed reading alert settings are changed by user, this value will be set to true
@@ -1880,10 +2003,9 @@ extension UserDefaults {
         }
     }
     
+    // MARK: - =====  OS-AID (Loop/iAPS/Trio) App Group Share variables ======
     
-    // MARK: - =====  Loop Share Settings ======
-    
-    /// dictionary representation of readings that were shared  with Loop. This is not the json representation, it's an array of dictionary
+    /// dictionary representation of readings that were shared with a looping system. This is not the json representation, it's an array of dictionary
     var readingsStoredInSharedUserDefaultsAsDictionary: [Dictionary<String, Any>]? {
         get {
             return object(forKey: Key.readingsStoredInSharedUserDefaultsAsDictionary.rawValue) as? [Dictionary<String, Any>]
@@ -1893,7 +2015,7 @@ extension UserDefaults {
         }
     }
 
-    /// timestamp lastest reading shared with Loop via App Group
+    /// timestamp lastest reading shared via the selected Shared App Group
     var timeStampLatestLoopSharedBgReading:Date? {
         get {
             return object(forKey: Key.timeStampLatestLoopSharedBgReading.rawValue) as? Date
@@ -1903,35 +2025,27 @@ extension UserDefaults {
         }
     }
     
-    /// Loop sharing will be limited to just once every 5 minutes if true - default false
-    var shareToLoopOnceEvery5Minutes: Bool {
+    
+    // MARK: - =====  Developer Settings ======
+    
+    /// showDeveloperSettings - default false
+    /// we'll reset this to false anyway every time the app is opened
+    var showDeveloperSettings: Bool {
         get {
-            return bool(forKey: Key.shareToLoopOnceEvery5Minutes.rawValue)
+            return bool(forKey: Key.showDeveloperSettings.rawValue)
         }
         set {
-            set(newValue, forKey: Key.shareToLoopOnceEvery5Minutes.rawValue)
+            set(newValue, forKey: Key.showDeveloperSettings.rawValue)
         }
     }
     
-    // MARK: - =====  technical settings for testing ======
-    
-    /// G6 factor 1
-    @objc dynamic var G6v2ScalingFactor1:String? {
+    /// OSLogEnabled - default false
+    var OSLogEnabled: Bool {
         get {
-            return string(forKey: Key.G6v2ScalingFactor1.rawValue)
+            return bool(forKey: Key.OSLogEnabled.rawValue)
         }
         set {
-            set(newValue, forKey: Key.G6v2ScalingFactor1.rawValue)
-        }
-    }
-    
-    /// G6 factor 2
-    @objc dynamic var G6v2ScalingFactor2:String? {
-        get {
-            return string(forKey: Key.G6v2ScalingFactor2.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.G6v2ScalingFactor2.rawValue)
+            set(newValue, forKey: Key.OSLogEnabled.rawValue)
         }
     }
     
@@ -1955,6 +2069,39 @@ extension UserDefaults {
         }
     }
     
+    /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
+    ///
+    /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
+    @objc dynamic var loopDelaySchedule: String? {
+        get {
+            return string(forKey: Key.loopDelaySchedule.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.loopDelaySchedule.rawValue)
+        }
+    }
+    
+    /// should the BG values be shared with a specified app group
+    var loopShareType: LoopShareType {
+        get {
+            let loopShareTypeAsInt = integer(forKey: Key.loopShareType.rawValue)
+            return LoopShareType(rawValue: loopShareTypeAsInt) ?? .disabled
+        }
+        set {
+            set(newValue.rawValue, forKey: Key.loopShareType.rawValue)
+        }
+    }
+    
+    /// Loop sharing will be limited to just once every 5 minutes if true - default false
+    var shareToLoopOnceEvery5Minutes: Bool {
+        get {
+            return bool(forKey: Key.shareToLoopOnceEvery5Minutes.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.shareToLoopOnceEvery5Minutes.rawValue)
+        }
+    }
+    
     /// for Libre 2 : suppress sending unlockPayLoad, this will allow to run xDrip4iOS/Libre 2 in parallel with other app(s)
     var suppressUnLockPayLoad: Bool {
         get {
@@ -1965,13 +2112,70 @@ extension UserDefaults {
         }
     }
     
-    /// if true, then readings will not be written to shared user defaults (for loop)
-    var suppressLoopShare: Bool {
+    /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
+    ///
+    /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
+    @objc dynamic var loopDelayValueInMinutes: String? {
         get {
-            return bool(forKey: Key.suppressLoopShare.rawValue)
+            return string(forKey: Key.loopDelayValueInMinutes.rawValue)
         }
         set {
-            set(newValue, forKey: Key.suppressLoopShare.rawValue)
+            set(newValue, forKey: Key.loopDelayValueInMinutes.rawValue)
+        }
+    }
+    
+    /// LibreLinkUp version
+    @objc dynamic var libreLinkUpVersion: String? {
+        get {
+            var returnValue = string(forKey: Key.libreLinkUpVersion.rawValue)
+            
+            // if nil set to defaultvalue
+            if returnValue == nil {
+                
+                set(ConstantsLibreLinkUp.libreLinkUpVersionDefault, forKey: Key.libreLinkUpVersion.rawValue)
+                
+                returnValue = string(forKey: Key.libreLinkUpVersion.rawValue)
+                
+            }
+
+            return returnValue
+        }
+        set {
+            set(newValue, forKey: Key.libreLinkUpVersion.rawValue)
+        }
+    }
+    
+    /// should the app allow a high contrast mode for the .systemSmall widget when shown in StandBy mode at night?
+    var allowStandByHighContrast: Bool {
+        // default value for bool in userdefaults is false, as default we want the app to allow high contrast for StandBy as needed
+        get {
+            return !bool(forKey: Key.allowStandByHighContrast.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.allowStandByHighContrast.rawValue)
+        }
+    }
+    
+    
+    // MARK: - =====  technical settings for testing ======
+    
+    /// G6 factor 1
+    @objc dynamic var G6v2ScalingFactor1:String? {
+        get {
+            return string(forKey: Key.G6v2ScalingFactor1.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.G6v2ScalingFactor1.rawValue)
+        }
+    }
+    
+    /// G6 factor 2
+    @objc dynamic var G6v2ScalingFactor2:String? {
+        get {
+            return string(forKey: Key.G6v2ScalingFactor2.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.G6v2ScalingFactor2.rawValue)
         }
     }
 
@@ -2032,16 +2236,6 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.previousTemperatureAdjustmentValues.rawValue)
-        }
-    }
-    
-    /// OSLogEnabled - default false
-    var OSLogEnabled: Bool {
-        get {
-            return bool(forKey: Key.OSLogEnabled.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.OSLogEnabled.rawValue)
         }
     }
     
@@ -2182,6 +2376,40 @@ extension UserDefaults {
         }
     }
     
+    
+    // MARK: - Heartbeat
+    
+    /// timestamp of last successful connection to follower service
+    @objc dynamic var timeStampOfLastHeartBeat: Date? {
+        get {
+            return object(forKey: Key.timeStampOfLastHeartBeat.rawValue) as? Date
+        }
+        set {
+            set(newValue, forKey: Key.timeStampOfLastHeartBeat.rawValue)
+        }
+    }
+    
+    /// how many seconds should be considered as the maximum since the last heartbeat before we show a warning/error?
+    var secondsUntilHeartBeatDisconnectWarning: Double? {
+        get {
+            return double(forKey: Key.secondsUntilHeartBeatDisconnectWarning.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.secondsUntilHeartBeatDisconnectWarning.rawValue)
+        }
+    }
+    
+    // MARK: - Snooze
+    
+    /// used by the observer in RVC to update the UI for the snooze status
+    @objc dynamic var updateSnoozeStatus: Bool {
+        get {
+            return bool(forKey: Key.updateSnoozeStatus.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.updateSnoozeStatus.rawValue)
+        }
+    }
 }
 
 

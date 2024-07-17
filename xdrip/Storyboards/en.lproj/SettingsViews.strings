@@ -5,7 +5,7 @@
 "settingsviews_translateOnlineHelp" = "Translate Automatically";
 "settingsviews_showHelpIcon" = "Show Help Icon";
 "settingsviews_restartNeeded" = "(Restart required)";
-"settingsviews_sectiontitlegeneral" = "General";
+"settingsviews_sectiontitleNotifications" = "Notifications";
 "settingsviews_selectbgunit" = "Blood Glucose Units";
 "settingsviews_masterorfollower" = "Master or Follower";
 "settingsviews_master" = "Master";
@@ -20,6 +20,7 @@
 "settingsviews_followerKeepAliveTypeDisabledMessage" = "Background keep-alive is disabled.\n\nWhen the app is not on screen, no alarms, app badges, notifications or BG updates will take place.\n\nThe app will remain sleeping until you open it again.\n\nThis mode has very little impact on the battery of your device.";
 "settingsviews_followerKeepAliveTypeNormalMessage" = "Background keep-alive is set to normal operation.\n\nWhen the app is not on screen, we will attempt to keep it running for you in the background so that BG updates are received and alarms can be triggered.\n\nThis mode has a noticeable impact on the battery of your device.";
 "settingsviews_followerKeepAliveTypeAggressiveMessage" = "Background keep-alive is set to aggressive.\n\nWhen the app is not on screen, we will aggressively attempt to keep it running for you in the background so that BG updates are received and alarms can be triggered.\n\nThis mode has a very noticeable impact on the battery of your device and should only be used if absolutely necessary.";
+"settingsviews_followerKeepAliveTypeHeartbeatMessage" = "Background keep-alive is set to use an external heartbeat. ❤️\n\nWhen the app is not on screen, the external heartbeat will wake it up in the background so that BG updates are received and alarms can be triggered.\n\nMake sure you add a valid heartbeat device in the Bluetooth screen.\n\nThis mode has very little impact on the battery of your device but will only work if a valid heartbeat is running.";
 "settingsviews_followerPatientName" = "Patient Name";
 "settingsviews_followerPatientNameMessage" = "Here you can write the name of the person you are following.\n\nThis can be useful if you are following several different people with several different apps.\n\nThis is optional and would normally be left empty.";
 "settingsviews_nightscoutNotEnabled" = "Nightscout is disabled\n\nTo upload follower BG values to Nightscout, you must enable it in the Nightscout section.";
@@ -45,9 +46,9 @@
 "settingsviews_urgentHighValue" = "Urgent High Value";
 "settingsviews_highValue" = "High Value";
 "settingsviews_targetValue" = "Target Value";
+"settingsviews_targetValueMessage" = "Set to 0 to disable the target";
 "settingsviews_lowValue" = "Low Value";
 "settingsviews_urgentLowValue" = "Urgent Low Value";
-"settingsviews_useobjectives" = "Show Objectives in Graph";
 "settingsviews_showcoloredobjectives" = "Show Colored Lines";
 "settingsviews_showtarget" = "Show Target Line";
 "settingsviews_sectiontitletreatments" = "Treatments";
@@ -71,7 +72,7 @@
 "settingsviews_transmitterid_text_for_button"  = "Transmitter ID";
 "settingsviews_givetransmitterid" = "Enter Transmitter ID";
 "settingsviews_resettransmitter" = "Reset Transmitter (Anubis only)";
-"settingsviews_resetDexcomTransmitterMessage" = "\nThis option will attempt to reset the transmitter on the next connection.\n\nNote that this will only work for G5 transmitters, very early G6 and all Anubis G6 transmitters.\n\nIt will NOT work for normal G6 or One transmitters.";
+"settingsviews_resetDexcomTransmitterMessage" = "\nThis option will attempt to reset the transmitter on the next connection.\n\nNote that this will only work for G5 transmitters, very early G6 and all Anubis G6 transmitters.\n\nIt will NOT work for normal G6 or ONE transmitters.";
 "settingsviews_webooptransmitter" = "Use Transmitter Algorithm";
 "settingsviews_nonfixedtransmitter" = "Enable Multi-point Calibration";
 "settingsviews_labelNonFixed" = "Multi-point Calibration";
@@ -131,6 +132,11 @@
 "infoCalendarAccessRestricted" = "You cannot give authorization to %@ to access your calendar. This is possibly due to active restrictions such as parental controls being in place.";
 "settingsviews_CalenderIntervalTitle" = "Event Interval";
 "settingsviews_CalenderIntervalMessage" = "Minimum interval between two calender events (mins)";
+"settingsviews_infoContactsAccessRestricted" = "You cannot give authorization to %@ to access your contacts. This is possibly due to active restrictions such as parental controls being in place.";
+"settingsviews_contactImageSectionTitle" = "Contact Image";
+"settingsviews_enableContactImage" = "Create Contact";
+"settingsviews_displayTrendInContactImage" = "Show Trend";
+"settingsviews_contactImageCreatedByString" = "Contact automatically created by";
 "sectionTitleTrace" = "Issue Reporting";
 "sendTraceFile" = "Send Issue Report";
 "describeProblem" = "Explain why you need to send the trace file with as much detail as possible. If you have already reported your problem in the Facebook support group '%@', then mention your facebook name in the e-mail";
@@ -154,10 +160,15 @@
 "settingsviews_housekeeperExportAllData" = "Export All Data";
 "settingsviews_housekeeperRetentionPeriodMessage" = "For how many days should data be stored? (Min 90, Max 365)\n\n(Recommended: 90 days)";
 "suppressUnLockPayLoad" = "Suppress Unlock Payload";
-"suppressLoopShare" = "Suppress Loop Share";
-"shareToLoopOnceEvery5Minutes" = "Share to Loop every 5 mins";
+"shareToLoopOnceEvery5Minutes" = "Share with OS-AID every 5 mins";
 "Select Time" = "Select Time";
 "Select Value" = "Select Value";
 "expanatoryTextSelectTime" = "As of what time should the value apply";
-"expanatoryTextSelectValue" = "Delay in minutes, applied to readings shared with Loop";
+"expanatoryTextSelectValue" = "Delay in minutes, applied to readings shared with OS-AID";
 "warningLoopDelayAlreadyExists" = "There is already a loopDelay for this time.";
+
+"appleWatchSectionTitle" = "Apple Watch";
+"appleWatchShowDataInComplications" = "Show Values in Complications";
+"appleWatchShowDataInComplicationsMessage" = "Please note that Apple Watch complications will not update in real-time. They will only update 2-3 times per hour.\n\nDO NOT rely on values in the complication for treatment decisions.\n\nFor real-time values, open the %@ Watch app.\n\nOnly click 'OK' if you understand and agree.";
+"appleWatchComplicationUserAgreementDate" = "User Agreement";
+"appleWatchRemainingComplicationUserInfoTransfers" = "Remaining Complication Updates";
