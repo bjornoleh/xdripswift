@@ -100,6 +100,10 @@ class Texts_SettingsView {
         return NSLocalizedString("settingsviews_sectionTitleDataSource", tableName: filename, bundle: Bundle.main, value: "CGM Data Source", comment: "CGM data source settings, section title")
     }()
     
+    static let labelSetActiveCGM: String = {
+        return NSLocalizedString("settingsviews_setActiveCGM", tableName: filename, bundle: Bundle.main, value: "Set as active CGM", comment: "Toggle to set as active CGM for APS and Dexom share upload etc")
+    }()
+    
     static let labelMasterOrFollower: String = {
         return NSLocalizedString("settingsviews_masterorfollower", tableName: filename, bundle: Bundle.main, value: "Use as Master or Follower", comment: "data source settings, master or follower")
     }()
