@@ -10,39 +10,42 @@ import UIKit
 import os
 
 fileprivate enum Setting: Int, CaseIterable {
+
+    /// Toggle to set as active CGM for APS and Dexom share upload etc
+    case setActiveCGM = 0
     
     /// blood glucose  unit
-    case bloodGlucoseUnit = 0
+    case bloodGlucoseUnit = 1
     
     /// choose between master and follower
-    case masterFollower = 1
+    case masterFollower = 2
     
     /// if follower, what should be the data source
-    case followerDataSourceType = 2
+    case followerDataSourceType = 3
     
     /// if follower, should we try and keep the app alive in the background
-    case followerKeepAliveType = 3
+    case followerKeepAliveType = 4
     
     /// patient name/alias (optional) - useful for users who follow various people
-    case followerPatientName = 4
+    case followerPatientName = 5
     
     /// if follower data source is not Nightscout, should we upload the BG values to Nightscout?
-    case followerUploadDataToNightscout = 5
+    case followerUploadDataToNightscout = 6
     
     /// web follower username
-    case followerUserName = 6
+    case followerUserName = 7
     
     /// web follower username
-    case followerPassword = 7
+    case followerPassword = 8
     
     /// web follower sensor serial number (will not always be available)
-    case followerSensorSerialNumber = 8
+    case followerSensorSerialNumber = 9
     
     /// web follower sensor start date (will not always be available)
-    case followerSensorStartDate = 9
+    case followerSensorStartDate = 10
     
     /// web follower server region
-    case followerRegion = 10
+    case followerRegion = 11
     
 }
 
@@ -96,7 +99,8 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         
         // changing follower to master or master to follower requires changing ui for nightscout settings and transmitter type settings
         // the same applies when changing bloodGlucoseUnit, because off the seperate section with bgObjectives
-        if (index == Setting.bloodGlucoseUnit.rawValue || index == Setting.masterFollower.rawValue || index == Setting.followerDataSourceType.rawValue) {return true}
+        // setActiveCGM also requires a refresh due to changing the showReadingInAppBadge setting in the Notifications section
+        if (index == Setting.bloodGlucoseUnit.rawValue || index == Setting.masterFollower.rawValue || index == Setting.followerDataSourceType.rawValue || index == Setting.setActiveCGM.rawValue) {return true}
         
         return false
     }
@@ -109,6 +113,9 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         guard let setting = Setting(rawValue: index) else { fatalError("Unexpected Section") }
 
         switch setting {
+            
+        case .setActiveCGM:
+            return .nothing
             
         case .bloodGlucoseUnit:
             return SettingsSelectedRowAction.callFunction(function: {
@@ -354,7 +361,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         // if master is selected then just show this row and hide the rest
         if UserDefaults.standard.isMaster {
             
-            return 2
+            return 3
             
         } else {
             
@@ -364,7 +371,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
             
             case .nightscout:
                 // no need to show any extra rows/settings (beyond patient name) as all Nightscout required parameters are set in the Nightscout section
-                return 5
+                return 6
             
             case .libreLinkUp:
                 // show all sections
@@ -381,6 +388,9 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         
         switch setting {
             
+        case .setActiveCGM:
+            return Texts_SettingsView.labelSetActiveCGM
+        
         case .bloodGlucoseUnit:
             return Texts_SettingsView.labelSelectBgUnit
             
@@ -423,6 +433,9 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         
         switch setting {
     
+        case .setActiveCGM:
+            return UITableViewCell.AccessoryType.none
+        
         case .bloodGlucoseUnit, .masterFollower, .followerUploadDataToNightscout, .followerSensorSerialNumber, .followerRegion:
             return UITableViewCell.AccessoryType.none
             
@@ -441,6 +454,9 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
 
         switch setting {
             
+        case .setActiveCGM:
+            return nil
+        
         case .bloodGlucoseUnit:
             return UserDefaults.standard.bloodGlucoseUnitIsMgDl ? Texts_Common.mgdl:Texts_Common.mmol
             
@@ -565,6 +581,23 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         case .followerUploadDataToNightscout:
             return UserDefaults.standard.nightScoutEnabled ? UISwitch(isOn: UserDefaults.standard.followerUploadDataToNightscout, action: {(isOn:Bool) in UserDefaults.standard.followerUploadDataToNightscout = isOn}) : nil
 
+        case .setActiveCGM:
+                    return UISwitch(isOn: UserDefaults.standard.setActiveCGM, action: {
+                        (isOn:Bool) in
+                        
+                        UserDefaults.standard.setActiveCGM = isOn
+                        UserDefaults.standard.showReadingInAppBadge = isOn
+                        
+                        if !isOn {
+                            let uNUserNotificationCenter = UNUserNotificationCenter.current()
+                            // first of all remove all existing missedreading notifications
+                            uNUserNotificationCenter.removeDeliveredNotifications(withIdentifiers: [AlertKind.missedreading.notificationIdentifier()])
+                            uNUserNotificationCenter.removePendingNotificationRequests(withIdentifiers: [AlertKind.missedreading.notificationIdentifier()])
+                        }
+
+                                        
+                    })
+                        
         case .bloodGlucoseUnit, .masterFollower, .followerDataSourceType, .followerKeepAliveType, .followerPatientName, .followerUserName, .followerPassword, .followerSensorSerialNumber, .followerSensorStartDate, .followerRegion:
             return nil
             
