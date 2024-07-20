@@ -1,201 +1,217 @@
-import Foundation
-import os
-import EventKit
+//
+//  WatchManager.swift
+//  xdrip
+//
+//  Created by Paul Plant on 9/2/24.
+//  Copyright © 2024 Johan Degraeve. All rights reserved.
+//
 
-class WatchManager: NSObject {
+import Foundation
+import WatchConnectivity
+import WidgetKit
+import OSLog
+
+final class WatchManager: NSObject, ObservableObject {
     
     // MARK: - private properties
     
-    /// CoreDataManager to use
-    private let coreDataManager:CoreDataManager
-
-    /// BgReadingsAccessor instance
-    private let bgReadingsAccessor:BgReadingsAccessor
-
+    /// a watch connectivity session instance
+    private var session: WCSession
+    
+    /// a BgReadingsAccessor instance
+    private var bgReadingsAccessor: BgReadingsAccessor
+    
+    /// a coreDataManager instance (must be passed from RVC in the initializer)
+    private var coreDataManager: CoreDataManager
+    
+    /// hold the current watch state model
+    private var watchState = WatchState()
+    
+    private var lastForcedComplicationUpdateTimeStamp: Date = .distantPast
+    
     /// for logging
     private var log = OSLog(subsystem: ConstantsLog.subSystem, category: ConstantsLog.categoryWatchManager)
     
-    /// to create and delete events
-    private let eventStore = EKEventStore()
+    // MARK: - intializer
     
-    /// timestamp of last reading for which calendar event is created, initially set to 1 jan 1970
-    private var timeStampLastProcessedReading = Date(timeIntervalSince1970: 0.0)
-    
-    // MARK: - initializer
-    
-    init(coreDataManager: CoreDataManager) {
+    init(coreDataManager: CoreDataManager, session: WCSession = .default) {
         
+        // set coreDataManager and bgReadingsAccessor
         self.coreDataManager = coreDataManager
         self.bgReadingsAccessor = BgReadingsAccessor(coreDataManager: coreDataManager)
+        self.session = session
+        
+        super.init()
+        
+        if WCSession.isSupported() {
+            session.delegate = self
+            session.activate()
+        }
+        
+        processWatchState(forceComplicationUpdate: false)
         
     }
     
-    // MARK: - public functions
-    
-    /// process new readings
-    ///     - lastConnectionStatusChangeTimeStamp : when was the last transmitter dis/reconnect - if nil then  1 1 1970 is used
-    public func processNewReading(lastConnectionStatusChangeTimeStamp: Date?) {
+    private func processWatchState(forceComplicationUpdate: Bool) {
+        // create two simple arrays to send to the live activiy. One with the bg values in mg/dL and another with the corresponding timestamps
+        // this is needed due to the not being able to pass structs that are not codable/hashable
+        let hoursOfBgReadingsToSend: Double = 12
         
-        // check if createCalenderEvent is enabled in the settings and if so create calender event
-        if UserDefaults.standard.createCalendarEvent  {
-            createCalendarEvent(lastConnectionStatusChangeTimeStamp: lastConnectionStatusChangeTimeStamp)
-        }
+        let bgReadings = self.bgReadingsAccessor.getLatestBgReadings(limit: nil, fromDate: Date().addingTimeInterval(-3600 * hoursOfBgReadingsToSend), forSensor: nil, ignoreRawData: true, ignoreCalculatedValue: false)
         
-    }
-    
-    // MARK: - private functions
-    
-    private func createCalendarEvent(lastConnectionStatusChangeTimeStamp: Date?) {
+        let slopeOrdinal: Int = !bgReadings.isEmpty ? bgReadings[0].slopeOrdinal() : 1
         
-        // check that access to calendar is authorized by the user
-        guard EKEventStore.authorizationStatus(for: .event) == .authorized else {
-            trace("in createCalendarEvent, createCalendarEvent is enabled but access to calendar is not authorized, setting UserDefaults.standard.createCalendarEvent to false", log: log, category: ConstantsLog.categoryWatchManager, type: .info)
-            return
-        }
-        
-        // check that there is a calendar (should be)
-        guard let calendar = getCalendar() else {
-            trace("in createCalendarEvent, there's no calendar", log: log, category: ConstantsLog.categoryWatchManager, type: .info)
-            return
-        }
-        
-        // if an interval is defined, and if time since last created event is less than interval, then don't create a new event
-        // substract 10 seconds, because user will probably select a multiple of 5, and also readings usually arrive every 5 minutes
-        // example user selects 10 minutes interval, next reading will arrive in exactly 10 minutes, time interval to be checked will be 590 seconds
-        if Int(Date().timeIntervalSince(timeStampLastProcessedReading)) < (UserDefaults.standard.calendarInterval * 60 - 10) {
-            
-            trace("in createCalendarEvent, less than %{public}@ minutes since last event, will not create a new event", log: log, category: ConstantsLog.categoryWatchManager, type: .info, UserDefaults.standard.calendarInterval.description)
-            
-            return
-            
-        }
-        
-        // get 2 last Readings, with a calculatedValue
-        let lastReading = bgReadingsAccessor.get2LatestBgReadings(minimumTimeIntervalInMinutes: 4.0)
-        
-        // there should be at least one reading
-        guard lastReading.count > 0 else {
-            trace("in createCalendarEvent, there are no new readings to process", log: log, category: ConstantsLog.categoryWatchManager, type: .info)
-            return
-        }
-        
-        // latest reading should be less than 5 minutes old
-        guard abs(lastReading[0].timeStamp.timeIntervalSinceNow) < 5 * 60 else {
-            trace("in createCalendarEvent, the latest reading is older than 5 minutes", log: log, category: ConstantsLog.categoryWatchManager, type: .info)
-            return        }
-        
-        // time to delete any existing events
-        deleteAllEvents(in: calendar)
-        
-        // compose the event title
-        // start with the reading in correct unit
-        var title = lastReading[0].unitizedString(unitIsMgDl: UserDefaults.standard.bloodGlucoseUnitIsMgDl).description
-        
-        // add the visual indicator to the title to show what range the current
-        // reading is in
-        if (UserDefaults.standard.displayVisualIndicatorInCalendarEvent){
-            
-            var visualIndicator = ""
-        
-            // get the current range of the last reading then
-            // configure the indicator based on the relevant range
-            switch lastReading[0].bgRangeDescription() {
-            case .inRange:
-                visualIndicator = ConstantsWatch.visualIndicatorInRange
-            case .notUrgent:
-                visualIndicator = ConstantsWatch.visualIndicatorNotUrgent
-            case .urgent:
-                visualIndicator = ConstantsWatch.visualIndicatorUrgent
-            }
-            
-            // pre-append the indicator to the title
-            title = visualIndicator + " " + title
-        }
-        
-        // add trend if needed and available
-        if (!lastReading[0].hideSlope && UserDefaults.standard.displayTrendInCalendarEvent) {
-            title = title + " " + lastReading[0].slopeArrow()
-        }
+        var deltaChangeInMgDl: Double?
         
         // add delta if needed
-        if UserDefaults.standard.displayDeltaInCalendarEvent && lastReading.count > 1 {
-            
-            title = title + " " + lastReading[0].unitizedDeltaString(previousBgReading: lastReading[1], showUnit: UserDefaults.standard.displayUnitInCalendarEvent, highGranularity: true, mgdl: UserDefaults.standard.bloodGlucoseUnitIsMgDl)
-            
-        } else if UserDefaults.standard.displayUnitInCalendarEvent {
-            
-            // add unit if needed
-            title = title + " " + (UserDefaults.standard.bloodGlucoseUnitIsMgDl ? Texts_Common.mgdl : Texts_Common.mmol)
-            
+        if bgReadings.count > 1 {
+            deltaChangeInMgDl = bgReadings[0].currentSlope(previousBgReading: bgReadings[1]) * bgReadings[0].timeStamp.timeIntervalSince(bgReadings[1].timeStamp) * 1000;
         }
         
-        // create an event now
-        let event = EKEvent(eventStore: eventStore)
-        event.title = title
-        event.notes = ConstantsWatch.textInCreatedEvent
-        event.startDate = Date()
-        event.endDate = Date(timeIntervalSinceNow: 60 * 10)
-        event.calendar = calendar
+        var bgReadingValues: [Double] = []
+        var bgReadingDatesAsDouble: [Double] = []
         
-        do{
-            
-            try eventStore.save(event, span: .thisEvent)
-            
-            timeStampLastProcessedReading = lastReading[0].timeStamp
-            
-        } catch let error {
-            
-            trace("in createCalendarEvent, error while saving : %{public}@", log: log, category: ConstantsLog.categoryWatchManager, type: .error, error.localizedDescription)
-            
+        for bgReading in bgReadings {
+            bgReadingValues.append(bgReading.calculatedValue)
+            bgReadingDatesAsDouble.append(bgReading.timeStamp.timeIntervalSince1970)
         }
-
+        
+        // now process the WatchState
+        watchState.bgReadingValues = bgReadingValues
+        watchState.bgReadingDatesAsDouble = bgReadingDatesAsDouble
+        watchState.isMgDl = UserDefaults.standard.bloodGlucoseUnitIsMgDl
+        watchState.slopeOrdinal = slopeOrdinal
+        watchState.deltaChangeInMgDl = deltaChangeInMgDl
+        watchState.urgentLowLimitInMgDl = UserDefaults.standard.urgentLowMarkValue
+        watchState.lowLimitInMgDl = UserDefaults.standard.lowMarkValue
+        watchState.highLimitInMgDl = UserDefaults.standard.highMarkValue
+        watchState.urgentHighLimitInMgDl = UserDefaults.standard.urgentHighMarkValue
+        watchState.activeSensorDescription = UserDefaults.standard.activeSensorDescription
+        watchState.isMaster = UserDefaults.standard.isMaster
+        watchState.followerDataSourceTypeRawValue = UserDefaults.standard.followerDataSourceType.rawValue
+        watchState.followerBackgroundKeepAliveTypeRawValue = UserDefaults.standard.followerBackgroundKeepAliveType.rawValue
+        watchState.keepAliveIsDisabled = !UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType == .disabled
+        watchState.liveDataIsEnabled = UserDefaults.standard.showDataInWatchComplications
+        
+        if let sensorStartDate = UserDefaults.standard.activeSensorStartDate {
+            watchState.sensorAgeInMinutes = Double(Calendar.current.dateComponents([.minute], from: sensorStartDate, to: Date()).minute!)
+        } else {
+            watchState.sensorAgeInMinutes = 0
+        }
+        
+        watchState.sensorMaxAgeInMinutes = (UserDefaults.standard.activeSensorMaxSensorAgeInDays ?? 0) * 24 * 60
+        
+        // let's set the state values if we're using a heartbeat
+        if let timeStampOfLastHeartBeat = UserDefaults.standard.timeStampOfLastHeartBeat, let secondsUntilHeartBeatDisconnectWarning = UserDefaults.standard.secondsUntilHeartBeatDisconnectWarning {
+            watchState.secondsUntilHeartBeatDisconnectWarning = Int(secondsUntilHeartBeatDisconnectWarning)
+            watchState.timeStampOfLastHeartBeat = timeStampOfLastHeartBeat
+        }
+        
+        // let's set the follower server connection values if we're using follower mode
+        if let timeStampOfLastFollowerConnection = UserDefaults.standard.timeStampOfLastFollowerConnection {
+            watchState.secondsUntilFollowerDisconnectWarning = UserDefaults.standard.followerDataSourceType.secondsUntilFollowerDisconnectWarning
+            watchState.timeStampOfLastFollowerConnection = timeStampOfLastFollowerConnection
+        }
+        
+        watchState.remainingComplicationUserInfoTransfers = session.remainingComplicationUserInfoTransfers
+        
+        sendStateToWatch(forceComplicationUpdate: false)
     }
     
-    /// - gets all calendars on the device, if one of them has a title that matches the name stored in  UserDefaults.standard.calenderId, then it returns that calendar.
-    /// - else returns the default calendar and sets the value in the UserDefaults to that default value
-    /// - also if currently there's no value in the UserDefaults, then value will be assigned here to UserDefaults.standard.calenderId
-    /// - nil as return value should normally not happen, because there should always be at least one calendar on the device
-    private func getCalendar() -> EKCalendar? {
+    func sendStateToWatch(forceComplicationUpdate: Bool) {
+        guard session.isPaired else {
+            trace("no Watch is paired", log: self.log, category: ConstantsLog.categoryWatchManager, type: .debug)
+            return
+        }
         
-        // get calendar title stored in the settings and compare to list
-        if let calendarIdInUserDefaults = UserDefaults.standard.calenderId {
-            
-            // get all calendars, if there's one having the same title return that one
-            for calendar in eventStore.calendars(for: .event) {
-                
-                if calendar.title == calendarIdInUserDefaults {
-                    return calendar
+        guard session.isWatchAppInstalled else {
+            trace("watch app is not installed", log: self.log, category: ConstantsLog.categoryWatchManager, type: .debug)
+            return
+        }
+        
+        guard session.activationState == .activated else {
+            let activationStateString = "\(session.activationState)"
+            trace("watch session activationState = %{public}@. Reactivating", log: self.log, category: ConstantsLog.categoryWatchManager, type: .error, activationStateString)
+            session.activate()
+            return
+        }
+        
+        // if the WCSession is reachable it means that Watch app is in the foreground so send the watch state as a message
+        // if it's not reachable, then it means it's in the background so send the state as a userInfo
+        // if more than x minutes have passed since the last complication update, call transferCurrentComplicationUserInfo to force an update
+        // if not, then just send it as a normal priority transferUserInfo which will be queued and sent as soon as the watch app is reachable again (this will help get the app showing data quicker)
+        if let userInfo: [String: Any] = watchState.asDictionary {
+            if session.isReachable {
+                session.sendMessage(["watchState": userInfo], replyHandler: nil, errorHandler: { (error) -> Void in
+                    trace("error sending watch state, error = %{public}@", log: self.log, category: ConstantsLog.categoryWatchManager, type: .error, error.localizedDescription)
+                })
+            } else {
+                if (lastForcedComplicationUpdateTimeStamp < Date().addingTimeInterval(-Double(UserDefaults.standard.forceComplicationUpdateInMinutes * 60)) && session.isComplicationEnabled && UserDefaults.standard.showDataInWatchComplications) || forceComplicationUpdate {
+                    
+                    let updateType: String = forceComplicationUpdate ? "forcing" : "sending"
+                    
+                    trace("%{public}@ background complication update every %{public}@ minutes, remaining complication transfers left today: %{public}@ / 50", log: self.log, category: ConstantsLog.categoryWatchManager, type: .info, updateType, UserDefaults.standard.forceComplicationUpdateInMinutes.description, session.remainingComplicationUserInfoTransfers.description)
+                    
+                    session.transferCurrentComplicationUserInfo(["watchState": userInfo])
+                    lastForcedComplicationUpdateTimeStamp = .now
+                    UserDefaults.standard.remainingComplicationUserInfoTransfers = session.remainingComplicationUserInfoTransfers
+                } else {
+                    trace("sending background watch state update", log: self.log, category: ConstantsLog.categoryWatchManager, type: .info)
+                    
+                    session.transferUserInfo(["watchState": userInfo])
                 }
             }
-            
         }
-        
-        // so there's no value in UserDefaults.standard.calenderId or there isn't a calendar that has a title as stored in UserDefaults.standard.calenderId
-        // set now UserDefaults.standard.calenderId to default calendar and return that one
-        UserDefaults.standard.calenderId = eventStore.defaultCalendarForNewEvents?.title
-        
-        return eventStore.defaultCalendarForNewEvents
-
     }
     
-    // deletes all xdrip events in the calendar, for the last 24 hours
-    private func deleteAllEvents(in calendar:EKCalendar) {
+    
+    // MARK: - Public functions
+    
+    func updateWatchApp(forceComplicationUpdate: Bool) {
+        processWatchState(forceComplicationUpdate: forceComplicationUpdate)
+    }
+}
+
+
+// MARK: - conform to WCSessionDelegate protocol
+
+extension WatchManager: WCSessionDelegate {
+    func sessionDidBecomeInactive(_: WCSession) {}
+    
+    func sessionDidDeactivate(_: WCSession) {
+        session = WCSession.default
+        session.delegate = self
+        session.activate()
+    }
+    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+    }
+    
+    // process any received messages from the watch app
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         
-        let predicate = eventStore.predicateForEvents(withStart: Date(timeIntervalSinceNow: -24*3600), end: Date(), calendars: [calendar])
-        
-        let events = eventStore.events(matching: predicate)
-        
-        for event in events {
-            if let notes = event.notes {
-                if notes.contains(find: ConstantsWatch.textInCreatedEvent) {
-                    do{
-                        try eventStore.remove(event, span: .thisEvent)
-                    } catch let error {
-                        trace("in deleteAllEvents, error while removing : %{public}@", log: log, category: ConstantsLog.categoryWatchManager, type: .error, error.localizedDescription)
-                    }
+        // check which type of update the Watch is requesting and call the correct sending function as needed
+        if let requestWatchUpdate = message["requestWatchUpdate"] as? String {
+            switch requestWatchUpdate {
+            case "watchState":
+                DispatchQueue.main.async {
+                    self.sendStateToWatch(forceComplicationUpdate: false)
                 }
+            default:
+                break
             }
         }
     }
     
+    func session(_: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {}
+    
+    func session(_: WCSession, didReceiveMessageData _: Data) {}
+    
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        if session.isReachable {
+            DispatchQueue.main.async {
+                self.sendStateToWatch(forceComplicationUpdate: false)
+            }
+        }
+    }
 }
