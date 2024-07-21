@@ -1007,19 +1007,16 @@ extension UserDefaults {
                 if let urlTypes = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: Any]],
                     let urlSchemes = urlTypes.first?["CFBundleURLSchemes"] as? [String],
                     let urlScheme = urlSchemes.first {
-                    // Initialize UserDefaults with app group suite name
-                    let suiteName = Bundle.main.appGroupSuiteName
-                    let sharedDefaults = UserDefaults(suiteName: suiteName)
+                    // use the app group suite name that is chosen in the settings (i.e. Loop/iAPS or Trio)
+                    let sharedUserDefaults = UserDefaults(suiteName: UserDefaults.standard.loopShareType.sharedUserDefaultsSuiteName)
                     
                     // store the app's URL scheme as a string in shared UserDefaults
-                    sharedDefaults?.set(urlScheme, forKey: "urlScheme")
+                    sharedUserDefaults?.set(urlScheme, forKey: "urlScheme")
                 }
             } else {
-                // Initialize UserDefaults with app group suite name
-                let suiteName = Bundle.main.appGroupSuiteName
-                let sharedDefaults = UserDefaults(suiteName: suiteName)
+                let sharedUserDefaults = UserDefaults(suiteName: UserDefaults.standard.loopShareType.sharedUserDefaultsSuiteName)
                 
-                sharedDefaults?.set(nil, forKey: "urlScheme")
+                sharedUserDefaults?.set(nil, forKey: "urlScheme")
             }
 
             // synchronize UserDefaults

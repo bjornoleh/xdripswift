@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     @objc func handleUserDefaultsChange() {
-        if let sharedUserDefaults = UserDefaults(suiteName: Bundle.main.appGroupSuiteName) {
+        if let sharedUserDefaults = UserDefaults(suiteName: UserDefaults.standard.loopShareType.sharedUserDefaultsSuiteName) {
             if let urlScheme = sharedUserDefaults.string(forKey: "urlScheme") {
                 print("URL scheme is stored in UserDefaults: \(urlScheme)")
             } else {
