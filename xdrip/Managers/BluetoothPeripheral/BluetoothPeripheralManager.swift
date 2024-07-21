@@ -721,7 +721,7 @@ class BluetoothPeripheralManager: NSObject {
         
         if UserDefaults.standard.setActiveCGM { // only store cgm transmitter device address to shared userdefaults if the app is set as Active CGM
         
-        if let sharedUserDefaults = UserDefaults(suiteName: Bundle.main.appGroupSuiteName) {
+        if let sharedUserDefaults = UserDefaults(suiteName: UserDefaults.standard.loopShareType.sharedUserDefaultsSuiteName) {
             
             if let cgmTransmitter = getCGMTransmitter(), let cgmtransmitterAddress = currentCgmTransmitterAddress {
                 
