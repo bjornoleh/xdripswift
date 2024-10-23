@@ -372,7 +372,7 @@ class Texts_SettingsView {
     }()
     
     static let labelResetTransmitter:String = {
-        return NSLocalizedString("settingsviews_resettransmitter", tableName: filename, bundle: Bundle.main, value: "Reset Transmitter (Anubis only)", comment: "transmitter settings, to explain that settings is about resetting the transmitter")
+        return NSLocalizedString("settingsviews_resettransmitter", tableName: filename, bundle: Bundle.main, value: "Reset Transmitter", comment: "transmitter settings, to explain that settings is about resetting the transmitter")
     }()
     
     static let resetDexcomTransmitterMessage: String = {

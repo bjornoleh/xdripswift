@@ -135,16 +135,6 @@ class DexcomG5BluetoothPeripheralViewModel {
         return false
         
     }
-    
-    /// should we show the sensor start time? This is needed because it is initialized to date() with a new peripheral and we don't really
-    /// want to show any date until the sensor session is started and we get a real date
-    private func shouldShowSensorStartDate() -> Bool {
-        if let dexcomG5 = dexcomG5, dexcomG5.sensorStatus != DexcomAlgorithmState.SessionStopped.description {
-            return true
-        }
-        
-        return false
-    }
 
     // MARK: - public functions
     
@@ -236,7 +226,7 @@ extension DexcomG5BluetoothPeripheralViewModel: BluetoothPeripheralViewModel {
                 
                 var startDateString = ""
                 
-                if let startDate = dexcomG5.sensorStartDate, shouldShowSensorStartDate() {
+                if let startDate = dexcomG5.sensorStartDate {
                     
                     let sensorTimeInMinutes = -Int(startDate.timeIntervalSinceNow / 60)
 
@@ -256,16 +246,12 @@ extension DexcomG5BluetoothPeripheralViewModel: BluetoothPeripheralViewModel {
                         
                     }
                     
-                } else {
-                    
-                    startDateString = Texts_HomeView.notStarted
-                    
                 }
                 
                 cell.textLabel?.text = Texts_BluetoothPeripheralView.sensorStartDate
                 cell.detailTextLabel?.text = startDateString
-                cell.accessoryView = shouldShowSensorStartDate() ? disclosureAccessoryView : nil
-                cell.accessoryType = shouldShowSensorStartDate() ? .disclosureIndicator : .none
+                cell.accessoryType = .disclosureIndicator
+                cell.accessoryView = disclosureAccessoryView
                 
             case .transmitterStartDate:
                 
@@ -358,7 +344,7 @@ extension DexcomG5BluetoothPeripheralViewModel: BluetoothPeripheralViewModel {
                 if let lastResetTimeStamp = dexcomG5.lastResetTimeStamp {
                     cell.detailTextLabel?.text = lastResetTimeStamp.toStringInUserLocale(timeStyle: .short, dateStyle: .short)
                 } else {
-                    cell.detailTextLabel?.text = "-"
+                    cell.detailTextLabel?.text = Texts_Common.unknown
                 }
                 
                 cell.accessoryType = .none
@@ -377,7 +363,7 @@ extension DexcomG5BluetoothPeripheralViewModel: BluetoothPeripheralViewModel {
             case .voltageA:
                 
                 cell.textLabel?.text = "Voltage A"
-                cell.detailTextLabel?.text = dexcomG5.voltageA != 0 ? dexcomG5.voltageA.description + "0 mV" : "Waiting for data..."
+                cell.detailTextLabel?.text = dexcomG5.voltageA != 0 ? dexcomG5.voltageA.description + "0 mV" : ""
                 
             case .voltageB:
                 
@@ -396,7 +382,7 @@ extension DexcomG5BluetoothPeripheralViewModel: BluetoothPeripheralViewModel {
                     }
                 }
                 
-                cell.detailTextLabel?.text = dexcomG5.voltageB != 0 ? dexcomBatteryLevelIndicator + dexcomG5.voltageB.description + "0 mV" : "Waiting for data..."
+                cell.detailTextLabel?.text = dexcomG5.voltageB != 0 ? dexcomBatteryLevelIndicator + dexcomG5.voltageB.description + "0 mV" : ""
                 
             }
 
@@ -424,7 +410,7 @@ extension DexcomG5BluetoothPeripheralViewModel: BluetoothPeripheralViewModel {
                 
             case .sensorStartDate:
                 
-                if let startDate = dexcomG5?.sensorStartDate, shouldShowSensorStartDate() {
+                if let startDate = dexcomG5?.sensorStartDate {
                     
                     var startDateString = startDate.toStringInUserLocale(timeStyle: .short, dateStyle: .short)
                     
@@ -432,8 +418,6 @@ extension DexcomG5BluetoothPeripheralViewModel: BluetoothPeripheralViewModel {
                     
                     return .showInfoText(title: Texts_BluetoothPeripheralView.sensorStartDate, message: "\n" + startDateString)
                     
-                } else {
-                    return .nothing
                 }
                 
             case .transmitterStartDate:
