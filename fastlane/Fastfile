@@ -60,12 +60,13 @@ platform :ios do
       build_number: current_build_number
     )
   
-    # Update the build_number.txt file locally
-    File.write("build_number.txt", current_build_number.to_s)
+    # Write the build number to a temporary directory
+    temp_dir = "/tmp/build_number"
+    File.write("#{temp_dir}/build_number.txt", current_build_number.to_s)
 
-    # Upload the build_number artifact after building
+    # Upload the file from the temporary directory
     copy_artifacts(
-      target_path: ".",
+      target_path: temp_dir,  # Use the temporary directory
       artifacts: ["build_number.txt"]
     )
   
