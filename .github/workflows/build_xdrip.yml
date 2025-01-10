@@ -219,27 +219,41 @@ jobs:
           submodules: recursive
           ref: ${{ env.TARGET_BRANCH }}
 
-      # Download build number artifact
-      - name: Download build number artifact
+      - name: Get the latest workflow run ID with build_number artifact
+        id: get_latest_run
+        run: |
+          # Fetch the list of recent workflow runs for the current repository
+          RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs?branch=${{ github.ref_name }}&per_page=5")
+          
+          # Filter through the runs to find the latest one with the build_number artifact
+          RUN_ID=$(echo "$RESPONSE" | jq -r '.workflow_runs[] | select(.status != "in_progress") | select(.artifacts | map(select(.name == "build_number")) | length > 0) | .id' | head -n 1)
+
+          if [ -z "$RUN_ID" ]; then
+            echo "No valid run with build_number artifact found."
+            exit 1
+          fi
+
+          echo "Latest valid run ID: $RUN_ID"
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV  # Store it as an environment variable for future use
+
+      - name: Download build number artifact from the latest valid run
         uses: actions/download-artifact@v4
         with:
           name: build_number
           path: .
-        continue-on-error: true # Continue if artifact is not found
-    
-      # Ensure build number file exists (fallback)
-      - name: Ensure build number file exists
-        run: |
-          if [ ! -f build_number.txt ]; then
-            echo "Artifact not found. Initializing build_number.txt with default value."
-            echo "1" > build_number.txt
-          fi
+          run-id: ${{ env.RUN_ID }}  # Use the run_id from the previous step
 
-      # Use the build number from the file to update the version and build number
-      - name: Read build number
-        id: read_build_number
+      - name: Handle missing artifact
+        if: failure()  # If the artifact isn't found, provide a fallback
+        run: |
+          echo "No previous build number found. Defaulting to 1."
+          echo "1" > build_number.txt
+
+      - name: Use build number
         run: |
           BUILD_NUMBER=$(cat build_number.txt)
+          echo "Using build number: $BUILD_NUMBER"
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
 
       # Patch Fastlane Match to not print tables
