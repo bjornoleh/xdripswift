@@ -218,56 +218,29 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           submodules: recursive
           ref: ${{ env.TARGET_BRANCH }}
-
+        
       - name: Get latest workflow run with build_number artifact
         id: get-latest-artifact
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          max_retries=5
-          retry_count=0
-      
-          while [ $retry_count -lt $max_retries ]; do
-            echo "Fetching workflow runs..."
-            response=$(gh api -X GET "repos/${{ github.repository }}/actions/runs?per_page=100")
-            echo "Artifact Response for run $run_id: $artifact_response"
-            
-            echo "Searching for the latest run with the build_number artifact..."
-            for run_id in $(echo "$response" | jq -r '.workflow_runs[] | .id'); do
-              artifact_response=$(gh api -X GET "repos/${{ github.repository }}/actions/runs/$run_id/artifacts")
-              
-              echo "Checking artifacts for run ID $run_id..."
-              artifact_id=$(echo "$artifact_response" | jq -r '.artifacts[] | select(.name == "build_number") | .id')
-              
-              if [ -n "$artifact_id" ]; then
-                echo "Found build_number artifact in run ID $run_id with artifact ID $artifact_id."
-                echo "id=$run_id" >> $GITHUB_OUTPUT
-                echo "artifact_id=$artifact_id" >> $GITHUB_OUTPUT
-                exit 0
-              fi
-            done
-      
-            echo "No build_number artifact found. Retrying in 10 seconds..."
-            sleep 10
-            retry_count=$((retry_count + 1))
+          # Fetch workflow runs
+          response=$(gh api repos/${{ github.repository }}/actions/runs --paginate --jq '.workflow_runs[] | select(.status == "completed")')
+          
+          # Check for the artifact in each run
+          for run in $(echo "$response" | jq -r '.id'); do
+            artifact_response=$(gh api repos/${{ github.repository }}/actions/runs/$run/artifacts --jq '.artifacts[] | select(.name == "build_number") | .id')
+            if [ -n "$artifact_response" ]; then
+              echo "Found artifact in run $run."
+              echo "id=$run" >> $GITHUB_OUTPUT
+              exit 0
+            fi
           done
       
-          echo "No valid run with build_number artifact found after $max_retries retries."
+          # If no valid artifact is found, fall back
+          echo "No valid run with build_number artifact found."
           echo "id=" >> $GITHUB_OUTPUT
-          echo "artifact_id=" >> $GITHUB_OUTPUT
-          exit 1
-      
-      - name: Verify artifact details
-        run: |
-          gh api -X GET "repos/${{ github.repository }}/actions/runs/${{ steps.get-latest-artifact.outputs.id }}/artifacts" --jq '.artifacts[] | {id, name}'
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-      
-      - name: Download artifact by ID
-        if: steps.get-latest-artifact.outputs.id != '' && steps.get-latest-artifact.outputs.artifact_id != ''
-        run: |
-          gh api -X GET "repos/${{ github.repository }}/actions/artifacts/${{ steps.get-latest-artifact.outputs.artifact_id }}/zip" --output build_number.zip
-          unzip build_number.zip -d .
+          exit 0
 
       - name: Download build_number artifact
         if: steps.get-latest-artifact.outputs.id != ''
@@ -275,14 +248,12 @@ jobs:
         with:
           name: build_number
           path: .
-          run-id: ${{ steps.get-latest-artifact.outputs.id }}
-      
+        continue-on-error: true
+        
       - name: Fallback if no artifact found
         if: steps.get-latest-artifact.outputs.id == ''
-        run: |
-          echo "No previous build number found. Defaulting to 1."
-          echo "1" > build_number.txt
-
+        run: echo "1" > build_number.txt
+        
       - name: Use build number
         run: |
           BUILD_NUMBER=$(cat build_number.txt)
