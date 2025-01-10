@@ -246,11 +246,11 @@ jobs:
         if: steps.get-latest-artifact.outputs.id != ''
         uses: actions/download-artifact@v4
         with:
-          run-id: $run
+          run-id: ${{ steps.get-latest-artifact.outputs.id }}
           name: build_number
           path: .
         continue-on-error: true
-        
+          
       - name: Fallback if no artifact found
         if: steps.get-latest-artifact.outputs.id == ''
         run: echo "1" > build_number.txt
