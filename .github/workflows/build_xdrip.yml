@@ -240,7 +240,7 @@ jobs:
           # If no valid artifact is found
           echo "No valid run with build_number artifact found."
           echo "id=" >> $GITHUB_OUTPUT
-          exit 1  # No artifact found, exit with error
+          exit 0  # No artifact found, exit without error
       
       - name: Download build_number artifact
         if: steps.get-latest-artifact.outputs.id != ''
@@ -263,7 +263,7 @@ jobs:
         if: steps.get-latest-artifact.outputs.id == ''
         run: echo "1" > build_number.txt
         
-      - name: Use build number
+      - name: Use downloaded build number
         run: |
           DOWNLOADED_BUILD_NUMBER=$(cat build_number.txt)
           echo "Using downloaded build number: $DOWNLOADED_BUILD_NUMBER"
@@ -280,6 +280,25 @@ jobs:
       # Sync the GitHub runner clock with the Windows time server (workaround as suggested in https://github.com/actions/runner/issues/2996)
       - name: Sync clock
         run: sudo sntp -sS time.windows.com
+
+      # Set build number
+      - name: Fastlane Set build number
+        run: bundle exec fastlane build_number
+        env:
+          TEAMID: ${{ secrets.TEAMID }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
+          FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
+          FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
+      # Upload incremented build number as artifact
+      - name: Upload incremented build number as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_number
+          path: build_number.txt
       
       # Build signed Xdrip4iOS IPA file
       - name: Fastlane Build & Archive
