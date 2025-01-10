@@ -59,21 +59,13 @@ platform :ios do
       xcodeproj: "#{GITHUB_WORKSPACE}/xdrip.xcodeproj",
       build_number: current_build_number
     )
-  
-    # Define the temporary directory for storing the build number file
-    temp_dir = "artifacts"  # A relative directory ignored by git
 
-    # Ensure the directory exists
-    #FileUtils.mkdir_p(temp_dir)  ## TODO: delete if not needed
-
-    # Write the build number to the file in the temporary directory
-    #build_number_file = "#{temp_dir}/build_number.txt"              ## TODO: delete if not needed
-    #File.write(build_number_file, current_build_number.to_s)
-    File.write(fastlane/build_number.txt, current_build_number.to_s)
+    # Write the build number to the file in the current directory
+    File.write("build_number.txt", current_build_number.to_s)
 
     # Print the absolute path and contents of the file to the logs
-    absolute_path = File.absolute_path(build_number.txt)
-    file_contents = File.read(build_number.txt)
+    absolute_path = File.absolute_path("build_number.txt")
+    file_contents = File.read("build_number.txt")
 
     UI.message("Build number file created at: #{absolute_path}")
     UI.message("Contents of build number file: #{file_contents}")
