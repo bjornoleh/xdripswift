@@ -60,14 +60,28 @@ platform :ios do
       build_number: current_build_number
     )
   
-    # Write the build number to a temporary directory
-    temp_dir = "/tmp/build_number"
-    File.write("#{temp_dir}/build_number.txt", current_build_number.to_s)
+    # Define the temporary directory for storing the build number file
+    temp_dir = "artifacts"  # A relative directory ignored by git
 
-    # Upload the file from the temporary directory
+    # Ensure the directory exists
+    FileUtils.mkdir_p(temp_dir)
+
+    # Write the build number to the file in the temporary directory
+    build_number_file = "#{temp_dir}/build_number.txt"
+    File.write(build_number_file, current_build_number.to_s)
+
+    # Print the absolute path and contents of the file to the logs
+    absolute_path = File.absolute_path(build_number_file)
+    file_contents = File.read(build_number_file)
+
+    UI.message("Build number file created at: #{absolute_path}")
+    UI.message("Contents of build number file: #{file_contents}")
+
+    # Use copy_artifacts to save the build_number.txt file
     copy_artifacts(
-      target_path: temp_dir,  # Use the temporary directory
-      artifacts: ["build_number.txt"]
+      target_path: temp_dir,   # The target directory to place the artifacts
+      artifacts: [build_number_file],  # List of files to preserve
+      fail_on_missing: true    # Ensure it fails if the file doesn't exist
     )
   
     update_project_team(
