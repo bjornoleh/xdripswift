@@ -221,6 +221,9 @@ jobs:
 
       - name: Get latest workflow run with build_number artifact
         id: get-latest-artifact
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }} # Provides the personal access token for the gh CLI
+
         run: |
           max_retries=5
           retry_count=0
