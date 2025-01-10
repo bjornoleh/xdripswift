@@ -62,6 +62,12 @@ platform :ios do
   
     # Update the build_number.txt file locally
     File.write("build_number.txt", current_build_number.to_s)
+
+    # Upload the build_number artifact after building
+    copy_artifacts(
+      target_path: ".",
+      artifacts: ["build_number.txt"]
+    )
   
     update_project_team(
       path: "#{GITHUB_WORKSPACE}/xdrip.xcodeproj",
