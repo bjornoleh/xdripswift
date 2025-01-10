@@ -224,32 +224,35 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          # Fetch workflow runs
+          # Fetch workflow runs, filter out completed ones
           response=$(gh api repos/${{ github.repository }}/actions/runs --paginate --jq '.workflow_runs[] | select(.status == "completed")')
           
-          # Check for the artifact in each run
+          # Loop through runs to check for the 'build_number' artifact
           for run in $(echo "$response" | jq -r '.id'); do
             artifact_response=$(gh api repos/${{ github.repository }}/actions/runs/$run/artifacts --jq '.artifacts[] | select(.name == "build_number") | .id')
             if [ -n "$artifact_response" ]; then
               echo "Found artifact in run $run."
               echo "id=$run" >> $GITHUB_OUTPUT
-              exit 0
+              exit 0  # Found the artifact, exit successfully
             fi
           done
       
-          # If no valid artifact is found, fall back
+          # If no valid artifact is found
           echo "No valid run with build_number artifact found."
           echo "id=" >> $GITHUB_OUTPUT
-          exit 0
-
-      - name: Download artifact by ID
+          exit 1  # No artifact found, exit with error
+      
+      - name: Download build_number artifact
         if: steps.get-latest-artifact.outputs.id != ''
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
+          # Get the artifact ID using the run ID and artifact name 'build_number'
           artifact_id=$(gh api repos/${{ github.repository }}/actions/runs/${{ steps.get-latest-artifact.outputs.id }}/artifacts --jq '.artifacts[] | select(.name == "build_number") | .id')
+          
           if [ -n "$artifact_id" ]; then
-            gh api repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip --output build_number.zip
+            # Download the artifact and unzip it
+            gh api repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip > build_number.zip
             unzip build_number.zip -d .
           else
             echo "Artifact not found."
