@@ -64,24 +64,25 @@ platform :ios do
     temp_dir = "artifacts"  # A relative directory ignored by git
 
     # Ensure the directory exists
-    FileUtils.mkdir_p(temp_dir)
+    #FileUtils.mkdir_p(temp_dir)  ## TODO: delete if not needed
 
     # Write the build number to the file in the temporary directory
-    build_number_file = "#{temp_dir}/build_number.txt"
-    File.write(build_number_file, current_build_number.to_s)
+    #build_number_file = "#{temp_dir}/build_number.txt"              ## TODO: delete if not needed
+    #File.write(build_number_file, current_build_number.to_s)
+    File.write(fastlane/build_number.txt, current_build_number.to_s)
 
     # Print the absolute path and contents of the file to the logs
-    absolute_path = File.absolute_path(build_number_file)
-    file_contents = File.read(build_number_file)
+    absolute_path = File.absolute_path(build_number.txt)
+    file_contents = File.read(build_number.txt)
 
     UI.message("Build number file created at: #{absolute_path}")
     UI.message("Contents of build number file: #{file_contents}")
 
     # Use copy_artifacts to save the build_number.txt file
     copy_artifacts(
-      target_path: temp_dir,   # The target directory to place the artifacts
-      artifacts: [build_number_file],  # List of files to preserve
-      fail_on_missing: true    # Ensure it fails if the file doesn't exist
+      target_path: "artifacts",                  # Keep the target path as artifacts
+      artifacts: ["fastlane/build_number.txt"],  # Full relative path to the file
+      fail_on_missing: true                      # Ensure it fails if the file doesn't exist
     )
   
     update_project_team(
