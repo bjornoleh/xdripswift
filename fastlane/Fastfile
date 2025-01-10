@@ -36,12 +36,12 @@ platform :ios do
     )
   
     previous_build_number_store = 0
-    if File.exist?("build_number.txt")
-      previous_build_number_store = File.read("build_number.txt").to_i
-      UI.message("Previous build number from artifact: #{previous_build_number_store}")
-    else
-      UI.message("No previous build number found in artifact.")
-    end
+  if ENV["DOWNLOADED_BUILD_NUMBER"]
+    previous_build_number_store = ENV["DOWNLOADED_BUILD_NUMBER"].to_i
+    UI.message("Previous build number from artifact: #{previous_build_number_store}")
+  else
+    UI.message("No previous build number found in artifact.")
+  end
   
     previous_build_number_appstore = latest_testflight_build_number(
       app_identifier: "com.#{TEAMID}.xdripswift",

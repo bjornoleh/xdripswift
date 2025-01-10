@@ -265,9 +265,9 @@ jobs:
         
       - name: Use build number
         run: |
-          BUILD_NUMBER=$(cat build_number.txt)
-          echo "Using build number: $BUILD_NUMBER"
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+          DOWNLOADED_BUILD_NUMBER=$(cat build_number.txt)
+          echo "Using downloaded build number: $DOWNLOADED_BUILD_NUMBER"
+          echo "DOWNLOADED_BUILD_NUMBER=$DOWNLOADED_BUILD_NUMBER" >> $GITHUB_ENV
 
       # Patch Fastlane Match to not print tables
       - name: Patch Match Tables
