@@ -298,7 +298,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build_number
-          path: build_number.txt
+          path: fastlane/build_number.txt
       
       # Build signed Xdrip4iOS IPA file
       - name: Fastlane Build & Archive
