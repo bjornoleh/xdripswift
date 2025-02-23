@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: Checkout target repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         # optional: set the branch to checkout,
         # sync action checks out your 'target_sync_branch' anyway
@@ -81,7 +81,7 @@ jobs:
 
       # Checks-out the repo
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # optional: set the branch to checkout,
           # sync action checks out your 'target_sync_branch' anyway
@@ -121,7 +121,7 @@ jobs:
       # Upload Build artifacts
       - name: Upload build log, IPA and Symbol artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
