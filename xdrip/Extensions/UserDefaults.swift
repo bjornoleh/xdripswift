@@ -58,8 +58,6 @@ extension UserDefaults {
         case libreLinkUpReAcceptNeeded = "libreLinkUpReAcceptNeeded"
         ///LibreLinkUp is a 15 day "Plus" sensor being used?
         case libreLinkUpIs15DaySensor = "libreLinkUpIs15DaySensor"
-        ///LibreLinkUp is a 15 day "Plus" sensor being used?
-        case libreLinkUpIs15DaySensor = "libreLinkUpIs15DaySensor"
         
         // General
         
@@ -117,12 +115,8 @@ extension UserDefaults {
         case showCarbsTreatmentsInList = "showCarbsTreatmentsInList"
         /// should the basal rates be listed in the treatment list/table?
         case showBasalTreatmentsInList = "showBasalTreatmentsInList"
-        /// should the basal rates be listed in the treatment list/table?
-        case showBasalTreatmentsInList = "showBasalTreatmentsInList"
         /// should the BG Checks be listed in the treatment list/table?
         case showBgCheckTreatmentsInList = "showBgCheckTreatmentsInList"
-        /// override the default canula age value (CAGE = time since site change)?
-        case CAGEMaxHours = "CAGEMaxHours"
         /// override the default canula age value (CAGE = time since site change)?
         case CAGEMaxHours = "CAGEMaxHours"
         
@@ -169,8 +163,6 @@ extension UserDefaults {
         case activeSensorMaxSensorAgeInDays = "activeSensorMaxSensorAgeInDays"
         /// overriden active sensor max days (lifetime) - only used for G6 Anubis transmitters
         case activeSensorMaxSensorAgeInDaysOverridenAnubis = "activeSensorMaxSensorAgeInDaysOverridenAnubis"
-        /// overriden active sensor max days (lifetime) - only used for G6 Anubis transmitters
-        case activeSensorMaxSensorAgeInDaysOverridenAnubis = "activeSensorMaxSensorAgeInDaysOverridenAnubis"
         
         
         // Transmitter
@@ -182,10 +174,6 @@ extension UserDefaults {
         
         /// should readings be uploaded to nightscout
         case nightscoutEnabled = "nightscoutEnabled"
-        /// should we try and follow any specific AID system (Loop, Trio, AAPS, OpenAPS etc)?
-        case nightscoutFollowType = "nightscoutFollowType"
-        /// should the app show the extended AID follow information?
-        case nightscoutFollowShowExpandedInfo = "nightscoutFollowShowExpandedInfo"
         /// should we try and follow any specific AID system (Loop, Trio, AAPS, OpenAPS etc)?
         case nightscoutFollowType = "nightscoutFollowType"
         /// should the app show the extended AID follow information?
@@ -210,22 +198,11 @@ extension UserDefaults {
         ///
         /// will be set to true in viewcontroller when a treatment is created, modified or deleted. The value will be observed by NightscoutSyncManager and when set to true, the manager knows a new sync is required
         case nightscoutSyncRequired = "nightscoutSyncRequired"
-        /// will be set to true in viewcontroller when a treatment is created, modified or deleted. The value will be observed by NightscoutSyncManager and when set to true, the manager knows a new sync is required
-        case nightscoutSyncRequired = "nightscoutSyncRequired"
 
         /// used to trigger view controllers that there's a change in TreatmentEntries
         ///
         /// value will be increased with 1 each time there's an update
         case nightscoutTreatmentsUpdateCounter = "nightscoutTreatmentsUpdateCounter"
-        
-        /// Nightscout profile stored as a JSON data object
-        case nightscoutProfile = "nightscoutProfile"
-        
-        /// Nightscout deviceStatus stored as a JSON data object
-        case nightscoutDeviceStatus = "nightscoutDeviceStatus"
-        
-        /// Nightscout deviceStatus update flag
-        case nightscoutDeviceStatusWasUpdated = "nightscoutDeviceStatusWasUpdated"
         
         /// Nightscout profile stored as a JSON data object
         case nightscoutProfile = "nightscoutProfile"
@@ -358,7 +335,6 @@ extension UserDefaults {
         /// timestamp lastest reading uploaded to Nightscout
         case timeStampLatestNSUploadedBgReadingToNightscout = "timeStampLatestUploadedBgReading"
         /// timestamp lastest treatment sync request to Nightscout
-        case timeStampLatestNightscoutSyncRequest = "timeStampLatestNightscoutSyncRequest"
         case timeStampLatestNightscoutSyncRequest = "timeStampLatestNightscoutSyncRequest"
         /// timestamp latest calibration uploaded to Nightscout
         case timeStampLatestNSUploadedCalibrationToNightscout = "timeStampLatestUploadedCalibration"
@@ -624,16 +600,6 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.libreLinkUpReAcceptNeeded.rawValue)
-        }
-    }
-    
-    /// has the user marked their Libre sensor as the Plus version with a 15 day lifetime?
-    @objc dynamic var libreLinkUpIs15DaySensor: Bool {
-        get {
-            return bool(forKey: Key.libreLinkUpIs15DaySensor.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.libreLinkUpIs15DaySensor.rawValue)
         }
     }
     
@@ -1166,17 +1132,6 @@ extension UserDefaults {
         }
     }
     
-    /// should the app show the basal rate treatments in the treatments list/table?
-    @objc dynamic var showBasalTreatmentsInList: Bool {
-        // default value for bool in userdefaults is true, by default we want the app to *hide* the basal treatments in the treatments table
-        get {
-            return bool(forKey: Key.showBasalTreatmentsInList.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.showBasalTreatmentsInList.rawValue)
-        }
-    }
-    
     /// should the app show the BG Check treatments in the treatments list/table?
     @objc dynamic var showBgCheckTreatmentsInList: Bool {
         // default value for bool in userdefaults is false, by default we want the app to *show* the BG Check treatments in the treatments table
@@ -1185,41 +1140,6 @@ extension UserDefaults {
         }
         set {
             set(!newValue, forKey: Key.showBgCheckTreatmentsInList.rawValue)
-        }
-    }
-    
-    /// micro-bolus threshold level in units as a Double
-    @objc dynamic var smallBolusTreatmentThreshold:Double {
-        get {
-
-            var returnValue = double(forKey: Key.smallBolusTreatmentThreshold.rawValue)
-            // if 0 set to defaultvalue
-            if returnValue == 0.0 {
-                returnValue = ConstantsGlucoseChart.defaultSmallBolusTreatmentThreshold
-            }
-
-            return returnValue
-        }
-        set {
-
-            set(newValue, forKey: Key.smallBolusTreatmentThreshold.rawValue)
-        }
-    }
-    
-    /// max canula age (CAGE) as Int - if nil, return default value
-    @objc dynamic var CAGEMaxHours: Int {
-        get {
-            var returnValue = integer(forKey: Key.CAGEMaxHours.rawValue)
-            // if 0 set to defaultvalue
-            if returnValue == 0 {
-                returnValue = ConstantsHomeView.CAGEDefaultMaxHours
-            }
-
-            return returnValue
-        }
-        
-        set {
-            set(newValue, forKey: Key.CAGEMaxHours.rawValue)
         }
     }
     
@@ -1404,16 +1324,6 @@ extension UserDefaults {
         }
     }
     
-    /// overriden active sensor max sensor days. Optional as should be set to nil if the user isn't using a G6 and hasn't overriden manually the max days
-    var activeSensorMaxSensorAgeInDaysOverridenAnubis: Double? {
-        get {
-            return double(forKey: Key.activeSensorMaxSensorAgeInDaysOverridenAnubis.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.activeSensorMaxSensorAgeInDaysOverridenAnubis.rawValue)
-        }
-    }
-    
 
     // MARK: Housekeeper Settings
 
@@ -1473,29 +1383,6 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.nightscoutEnabled.rawValue)
-        }
-    }
-    
-    /// holds the enum integer of the type of nightscout follower type to be shown, if any
-    /// default to 0 (basic type - just standard treatments and basal from NS)
-    var nightscoutFollowType: NightscoutFollowType {
-        get {
-            let nightscoutFollowTypeAsInt = integer(forKey: Key.nightscoutFollowType.rawValue)
-            return NightscoutFollowType(rawValue: nightscoutFollowTypeAsInt) ?? .none
-        }
-        set {
-            set(newValue.rawValue, forKey: Key.nightscoutFollowType.rawValue)
-        }
-    }
-    
-    /// show the expanded information views for AID follow
-    @objc dynamic var nightscoutFollowShowExpandedInfo: Bool {
-        // default value for bool in userdefaults is false, as default we want the app to show the expanded information
-        get {
-            return !bool(forKey: Key.nightscoutFollowShowExpandedInfo.rawValue)
-        }
-        set {
-            set(!newValue, forKey: Key.nightscoutFollowShowExpandedInfo.rawValue)
         }
     }
     
@@ -1600,27 +1487,20 @@ extension UserDefaults {
     ///
     /// will be set to true in viewcontroller when a treatment is created, modified or deleted. The value will be observed by NightscoutSyncManager and when set to true, the manager knows a new sync is required
     @objc dynamic var nightscoutSyncRequired: Bool {
-    /// will be set to true in viewcontroller when a treatment is created, modified or deleted. The value will be observed by NightscoutSyncManager and when set to true, the manager knows a new sync is required
-    @objc dynamic var nightscoutSyncRequired: Bool {
         get {
-            return bool(forKey: Key.nightscoutSyncRequired.rawValue)
             return bool(forKey: Key.nightscoutSyncRequired.rawValue)
         }
         set {
-            set(newValue, forKey: Key.nightscoutSyncRequired.rawValue)
             set(newValue, forKey: Key.nightscoutSyncRequired.rawValue)
         }
     }
     
     /// timestamp lastest reading uploaded to Nightscout
     var timeStampLatestNightscoutSyncRequest: Date? {
-    var timeStampLatestNightscoutSyncRequest: Date? {
         get {
-            return object(forKey: Key.timeStampLatestNightscoutSyncRequest.rawValue) as? Date
             return object(forKey: Key.timeStampLatestNightscoutSyncRequest.rawValue) as? Date
         }
         set {
-            set(newValue, forKey: Key.timeStampLatestNightscoutSyncRequest.rawValue)
             set(newValue, forKey: Key.timeStampLatestNightscoutSyncRequest.rawValue)
         }
     }
@@ -1634,44 +1514,6 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.nightscoutTreatmentsUpdateCounter.rawValue)
-        }
-    }
-    
-    /// Nightscout profile stored as a JSON data object
-    var nightscoutProfile: Data? {
-        get {
-            if let data = object(forKey: Key.nightscoutProfile.rawValue) as? Data {
-                return data
-            } else {
-                return nil
-            }
-        }
-        set {
-            set(newValue, forKey: Key.nightscoutProfile.rawValue)
-        }
-    }
-    
-    /// Nightscout device status stored as a JSON data object
-    @objc dynamic var nightscoutDeviceStatus: Data? {
-        get {
-            if let data = object(forKey: Key.nightscoutDeviceStatus.rawValue) as? Data {
-                return data
-            } else {
-                return nil
-            }
-        }
-        set {
-            set(newValue, forKey: Key.nightscoutDeviceStatus.rawValue)
-        }
-    }
-    
-    /// will be set to true when the nightscout device status has been updated fully
-    @objc dynamic var nightscoutDeviceStatusWasUpdated: Bool {
-        get {
-            return bool(forKey: Key.nightscoutSyncRequired.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.nightscoutSyncRequired.rawValue)
         }
     }
     
@@ -2413,17 +2255,6 @@ extension UserDefaults {
         }
     }
     
-    /// force StandBy mode to show a big number version of the widget
-    var forceStandByBigNumbers: Bool {
-        // default value for bool in userdefaults is false, as default we want the app to not show big numbers
-        get {
-            return bool(forKey: Key.forceStandByBigNumbers.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.forceStandByBigNumbers.rawValue)
-        }
-    }
-    
     
     // MARK: - =====  technical settings for testing ======
     
@@ -2679,4 +2510,5 @@ extension UserDefaults {
         }
     }
 }
+
 
