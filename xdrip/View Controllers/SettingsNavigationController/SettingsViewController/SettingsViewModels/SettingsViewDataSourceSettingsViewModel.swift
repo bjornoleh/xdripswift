@@ -243,7 +243,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
             
         case .followerUserName:
             switch UserDefaults.standard.followerDataSourceType {
-            case .libreLinkUp:
+            case .libreLinkUp, .libreLinkUpRussia:
                 return SettingsSelectedRowAction.askText(title: UserDefaults.standard.followerDataSourceType.description, message: Texts_SettingsView.enterUsername, keyboardType: .default, text: UserDefaults.standard.libreLinkUpEmail, placeHolder: nil, actionTitle: nil, cancelTitle: nil, actionHandler: { (libreLinkUpEmail: String) in
                         
                     UserDefaults.standard.libreLinkUpEmail = libreLinkUpEmail.toNilIfLength0()
@@ -262,7 +262,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
             
         case .followerPassword:
             switch UserDefaults.standard.followerDataSourceType {
-            case .libreLinkUp:
+            case .libreLinkUp, .libreLinkUpRussia:
                 return SettingsSelectedRowAction.askText(title: UserDefaults.standard.followerDataSourceType.description, message: Texts_SettingsView.enterPassword, keyboardType: .default, text: UserDefaults.standard.libreLinkUpPassword, placeHolder: nil, actionTitle: nil, cancelTitle: nil, actionHandler: { (libreLinkUpPassword: String) in
     
                     UserDefaults.standard.libreLinkUpPassword = libreLinkUpPassword.toNilIfLength0()
@@ -311,7 +311,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
                 // no need to show any extra rows/settings (beyond patient name) as all Nightscout required parameters are set in the Nightscout section
                 return 6
             
-            case .libreLinkUp:
+            case .libreLinkUp, .libreLinkUpRussia:
                 // show all sections if needed. If there is no active sensor data then just hide some of the rows
                 return UserDefaults.standard.activeSensorSerialNumber != nil ? count : count - (UserDefaults.standard.libreLinkUpPassword == nil || UserDefaults.standard.libreLinkUpEmail == nil ? 4 : 3)
             }
@@ -415,7 +415,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
             
         case .followerUserName:
             switch UserDefaults.standard.followerDataSourceType {
-            case .libreLinkUp:
+            case .libreLinkUp, .libreLinkUpRussia:
                 return UserDefaults.standard.libreLinkUpEmail?.obscured() ?? Texts_SettingsView.valueIsRequired
             default:
                 return nil
@@ -423,7 +423,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
             
         case .followerPassword:
             switch UserDefaults.standard.followerDataSourceType {
-            case .libreLinkUp:
+            case .libreLinkUp, .libreLinkUpRussia:
                 return UserDefaults.standard.libreLinkUpPassword?.obscured() ?? Texts_SettingsView.valueIsRequired
             default:
                 return nil
@@ -431,7 +431,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
             
         case .followerSensorSerialNumber:
             switch UserDefaults.standard.followerDataSourceType {
-            case .libreLinkUp:
+            case .libreLinkUp, .libreLinkUpRussia:
                 // we will use this row to also show important information regarding any login errors
                 if UserDefaults.standard.libreLinkUpReAcceptNeeded {
                     return Texts_SettingsView.libreLinkUpReAcceptNeeded
@@ -440,7 +440,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
                         // nicely format the (incomplete) serial numbers from LibreLinkUp
                         return processLibreLinkUpSensorInfo(sn: UserDefaults.standard.activeSensorSerialNumber)
                     } else if UserDefaults.standard.libreLinkUpPreventLogin {
-                        return "Invalid User/Password"
+                        return "⚠️ " + Texts_HomeView.libreLinkUpAccountCredentialsInvalid
                     } else {
                         return "⚠️ " + Texts_SettingsView.libreLinkUpNoActiveSensor
                     }
@@ -452,7 +452,7 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
             
         case .followerSensorStartDate:
             switch UserDefaults.standard.followerDataSourceType {
-            case .libreLinkUp:
+            case .libreLinkUp, .libreLinkUpRussia:
                 if let startDate = UserDefaults.standard.activeSensorStartDate {
                     let sensorTimeInMinutes = Int(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970) / 60
                     
@@ -487,6 +487,13 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
                     }
                     
                     return returnString
+                } else {
+                    return "-"
+                }
+                
+            case .libreLinkUpRussia:
+                if UserDefaults.standard.activeSensorSerialNumber != nil {
+                    return "Russia"
                 } else {
                     return "-"
                 }
