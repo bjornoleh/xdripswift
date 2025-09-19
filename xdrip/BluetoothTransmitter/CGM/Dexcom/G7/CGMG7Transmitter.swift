@@ -20,6 +20,13 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
     /// debounce timer to flush backfill while still connected
     private var backfillFlushTimer: Timer?
 
+    /// predictive timer to initiate the next scan/connect slightly before the expected tick
+    /// this was added to avoid a rare condition during testing where we had Auth timeouts which then caused us also to miss the glucoseG6Tx frame in the next cycle
+    private var nextCycleTimer: Timer?
+
+    /// whether the previous cycle encountered an auth-timeout (to widen lead time once)
+    private var lastCycleHadAuthTimeout: Bool = false
+
     // MARK: UUID's
     
     /// advertisement
@@ -165,6 +172,8 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
             self.authenticationTimeOutTimer = nil
             self.backfillFlushTimer?.invalidate()
             self.backfillFlushTimer = nil
+            self.nextCycleTimer?.invalidate()
+            self.nextCycleTimer = nil
             // Clear characteristic strong refs so no accidental retains persist
             self.writeControlCharacteristic = nil
             self.receiveAuthenticationCharacteristic = nil
@@ -182,6 +191,7 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
         // Delegate cleanup is handled by the base class in prepareForRelease()/deinit.
         authenticationTimeOutTimer?.invalidate()
         backfillFlushTimer?.invalidate()
+        nextCycleTimer?.invalidate()
     }
 
     // MARK: - BluetoothTransmitter overriden functions
@@ -334,6 +344,7 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
                         }
                         // stability: keep gap logic accurate by advancing last delivered timestamp on immediate delivery
                         self.timeStampLastReading = g7GlucoseMessage.timeStamp
+                        self.schedulePredictiveNextCycle(basedOn: g7GlucoseMessage.timeStamp)
                     } else {
                         // stability: we expect backfill soon, debounce a short flush so UI doesn't look stuck if Dexcom keeps link open
                         scheduleBackfillFlush()
@@ -356,6 +367,7 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
                         self.cgmTransmitterDelegate?.cgmTransmitterInfoReceived(glucoseData: &copy, transmitterBatteryInfo: nil, sensorAge: self.sensorAge)
                     }
                     self.timeStampLastReading = g7GlucoseMessage.timeStamp // stability
+                    self.schedulePredictiveNextCycle(basedOn: g7GlucoseMessage.timeStamp)
                 }
 
                 DispatchQueue.main.async { [weak self] in
@@ -426,6 +438,7 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
                     // reset adaptive auth-timeout counters on successful auth
                     consecutiveAuthTimeouts = 0
                     lastAuthTimeoutAt = nil
+                    lastCycleHadAuthTimeout = false
                     
                     // Ensure data notifies are armed (will no-op if already requested this connection)
                     armDataNotifiesIfNeeded()
@@ -513,7 +526,7 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
                         // adaptive: if we previously timed out auth, give the next attempt a bit more room (3s) for one cycle
                         let within5m = (self.lastAuthTimeoutAt != nil) ? (abs(self.lastAuthTimeoutAt!.timeIntervalSinceNow) < (5 * 60)) : false
                         
-                        let interval: TimeInterval = (self.consecutiveAuthTimeouts > 0 && within5m) ? 3.0 : 2.0
+                        let interval: TimeInterval = (self.consecutiveAuthTimeouts > 0 && within5m) ? 3.0 : 2.5
                         
                         self.lastAuthTimeoutIntervalUsed = interval
                         
@@ -639,6 +652,7 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
         
         consecutiveAuthTimeouts += 1
         lastAuthTimeoutAt = Date()
+        lastCycleHadAuthTimeout = true
         
         // deliver any pending readings/backfill before disconnecting
         flushBackfillDeliveringToDelegate()
@@ -693,9 +707,35 @@ class CGMG7Transmitter: BluetoothTransmitter, CGMTransmitter {
         if let firstReading = backfill.first {
             timeStampLastReading = firstReading.timeStamp
         }
+        if let timeStamp = timeStampLastReading { schedulePredictiveNextCycle(basedOn: timeStamp) }
 
         // reset backfill
         backfill = [GlucoseData]()
+    }
+
+    private func schedulePredictiveNextCycle(basedOn lastReadingAt: Date) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.nextCycleTimer?.invalidate()
+            let nextTick = lastReadingAt.addingTimeInterval(300) // 5 minutes after the reading timestamp
+            let lead: TimeInterval = self.lastCycleHadAuthTimeout ? 45.0 : 30.0
+            let fireAt = nextTick.addingTimeInterval(-lead)
+
+            let now = Date()
+            let delay = max(0.5, fireAt.timeIntervalSince(now)) // minimum small delay to avoid immediate storm
+
+            trace("G7 predictive: next tick at %{public}@, scheduling scan at %{public}@ (lead = %{public}.0fs, afterTimeout = %{public}@)", log: log, category: ConstantsLog.categoryCGMG7, type: .info,
+                  DateFormatter.localizedString(from: nextTick, dateStyle: .none, timeStyle: .medium),
+                  DateFormatter.localizedString(from: fireAt, dateStyle: .none, timeStyle: .medium),
+                  lead, String(self.lastCycleHadAuthTimeout))
+
+            self.nextCycleTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+                guard let self = self else { return }
+                _ = self.startScanning()
+                // one-shot: reset the flag so subsequent schedules use normal lead unless another timeout happens
+                self.lastCycleHadAuthTimeout = false
+            }
+        }
     }
     
     private func addGlucoseValueToUserDefaults(_ newValue: Int) {
