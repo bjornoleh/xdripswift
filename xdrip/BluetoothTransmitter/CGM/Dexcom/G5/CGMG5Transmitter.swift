@@ -92,7 +92,7 @@ class CGMG5Transmitter:BluetoothTransmitter, CGMTransmitter {
     private var lastTxGlucoseTimestamp: Date?
 
     /// Safety lead time before the expected next sample tick to attempt reconnect (seconds)
-    private let predictiveLeadSeconds: TimeInterval = 45
+    private let predictiveLeadSeconds: TimeInterval = 105
 
     /// - timestamp of last reading received during previous session
     private var timeStampOfLastG5Reading = Date(timeIntervalSince1970: 0)
@@ -1301,7 +1301,7 @@ class CGMG5Transmitter:BluetoothTransmitter, CGMTransmitter {
         let cap = nextPredictiveReconnectDeadline() ?? defaultCap
         
         // Target a point slightly before the expected tick
-        var target = cap.addingTimeInterval(-95) // 95s before expected tick
+        var target = cap.addingTimeInterval(-105) // 105s before expected tick
         
         // Do not schedule in the past; if already passed, fall back to now + 90s
         if target <= Date() {
