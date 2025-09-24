@@ -433,6 +433,9 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         guard let setting = Setting(rawValue: index) else { fatalError("Unexpected Section") }
         
         switch setting {
+        case .setActiveCGM:
+                    return UITableViewCell.AccessoryType.none
+            
         case .bloodGlucoseUnit, .masterFollower, .followerExtraRow5, .followerExtraRow8, .followerExtraRow10, .followerExtraRow11:
             return .none
             
@@ -575,6 +578,23 @@ class SettingsViewDataSourceSettingsViewModel: NSObject, SettingsViewModelProtoc
         guard let setting = Setting(rawValue: index) else { fatalError("Unexpected Section") }
         
         switch setting {
+        case .setActiveCGM:
+                            return UISwitch(isOn: UserDefaults.standard.setActiveCGM, action: {
+                                (isOn:Bool) in
+                                
+                                UserDefaults.standard.setActiveCGM = isOn
+                                UserDefaults.standard.showReadingInAppBadge = isOn
+                                
+                                if !isOn {
+                                    let uNUserNotificationCenter = UNUserNotificationCenter.current()
+                                    // first of all remove all existing missedreading notifications
+                                    uNUserNotificationCenter.removeDeliveredNotifications(withIdentifiers: [AlertKind.missedreading.notificationIdentifier()])
+                                    uNUserNotificationCenter.removePendingNotificationRequests(withIdentifiers: [AlertKind.missedreading.notificationIdentifier()])
+                                }
+
+                                                
+                            })
+            
         case .followerExtraRow2:
             if UserDefaults.standard.isMaster {
                 return UserDefaults.standard.nightscoutEnabled ? UISwitch(isOn: UserDefaults.standard.masterUploadDataToNightscout, action: { (isOn: Bool) in UserDefaults.standard.masterUploadDataToNightscout = isOn } ) : nil
