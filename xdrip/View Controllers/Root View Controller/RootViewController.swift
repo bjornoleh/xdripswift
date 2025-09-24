@@ -127,9 +127,6 @@ final class RootViewController: UIViewController, ObservableObject {
     // ***************************
     // ***** Main Chart View *****
     // ***************************
-    /// outlet for optional patient name to show who is being followed
-    @IBOutlet weak var followerPatientNameLabelOutlet: UILabel!
-    
     /// outlet for chart
     @IBOutlet weak var chartOutlet: BloodGlucoseChartView!
     
@@ -241,7 +238,8 @@ final class RootViewController: UIViewController, ObservableObject {
     /// this is to allow a user to make screenshots etc without any personal information
     @IBAction func urlDoubleTapGestureRecognizerAction(_ sender: UITapGestureRecognizer) {
         // make sure we only act on the gesture if we're in Nightscout follower mode (i.e. with the URL visible)
-        if !UserDefaults.standard.isMaster && UserDefaults.standard.nightscoutEnabled && UserDefaults.standard.followerDataSourceType == .nightscout && UserDefaults.standard.nightscoutUrl != nil {
+        // also skip if there is a patient name being displayed
+        if !UserDefaults.standard.isMaster && UserDefaults.standard.nightscoutEnabled && UserDefaults.standard.followerDataSourceType == .nightscout && UserDefaults.standard.nightscoutUrl != nil && UserDefaults.standard.followerPatientName == nil {
             dataSourceSensorMaxAgeOutlet.textColor = .systemRed
             dataSourceSensorMaxAgeOutlet.text = Texts_HomeView.hidingUrlForXSeconds
             
@@ -508,6 +506,9 @@ final class RootViewController: UIViewController, ObservableObject {
     
     /// LibreLinkUpFollowManager instance
     private var libreLinkUpFollowManager: LibreLinkUpFollowManager?
+    
+    /// DexcomShareFollowManager instance
+    private var dexcomShareFollowManager: DexcomShareFollowManager?
     
     /// LoopFollowManager instance
     private var loopFollowManager: LoopFollowManager?
@@ -1161,8 +1162,11 @@ final class RootViewController: UIViewController, ObservableObject {
         // setup nightscoutmanager
         nightscoutFollowManager = NightscoutFollowManager(coreDataManager: coreDataManager, followerDelegate: self)
         
-        // setup nightscoutmanager
+        // setup libreLinkUpFollowManager
         libreLinkUpFollowManager = LibreLinkUpFollowManager(coreDataManager: coreDataManager, followerDelegate: self)
+        
+        // setup dexcomShareFollowManager
+        dexcomShareFollowManager = DexcomShareFollowManager(coreDataManager: coreDataManager, followerDelegate: self)
         
         // setup loop follow manager
         loopFollowManager = LoopFollowManager(coreDataManager: coreDataManager, followerDelegate: self)
@@ -1254,6 +1258,8 @@ final class RootViewController: UIViewController, ObservableObject {
             self.nightscoutFollowManager?.download()
             
             self.libreLinkUpFollowManager?.download()
+            
+            self.dexcomShareFollowManager?.download()
             
         }, cgmTransmitterInfoChanged: cgmTransmitterInfoChanged)
         
@@ -2358,10 +2364,6 @@ final class RootViewController: UIViewController, ObservableObject {
             landscapeValueViewController?.updateLabels(minutesLabelTextColor: minutesLabelOutlet.textColor, minutesLabelText: minutesLabelOutlet.text, minuteslabelAgoTextColor: minutesAgoLabelOutlet.textColor, minutesLabelAgoText: minutesAgoLabelOutlet.text, diffLabelTextColor: diffLabelOutlet.textColor, diffLabelText: diffLabelOutlet.text, diffLabelUnitTextColor: diffLabelUnitOutlet.textColor, diffLabelUnitText: diffLabelUnitOutlet.text, valueLabelTextColor: valueLabelOutlet.textColor, valueLabelText: valueLabelOutlet.text, valueLabelAttributedText: valueLabelOutlet.attributedText)
         }
         
-        // if in follower mode, show the patient name if one has been entered
-        followerPatientNameLabelOutlet.text = UserDefaults.standard.followerPatientName ?? ""
-        followerPatientNameLabelOutlet.isHidden = UserDefaults.standard.isMaster
-        
         // set minutesLabelOutlet.textColor to white, might still be red due to panning back in time
         self.minutesLabelOutlet.textColor = UIColor(resource: .colorPrimary)
         self.diffLabelOutlet.textColor = UIColor(resource: .colorPrimary)
@@ -3307,6 +3309,9 @@ final class RootViewController: UIViewController, ObservableObject {
                     dataSourceSensorMaxAgeOutlet.textColor = .systemRed
                     dataSourceSensorMaxAgeOutlet.text = Texts_HomeView.nightscoutURLMissing
                     
+                } else if let followerPatientName = UserDefaults.standard.followerPatientName {
+                    dataSourceSensorMaxAgeOutlet.text = followerPatientName
+                    
                 } else {
                     var nightscoutUrlString: String = UserDefaults.standard.nightscoutUrl ?? ""
                     
@@ -3322,10 +3327,16 @@ final class RootViewController: UIViewController, ObservableObject {
             case .libreLinkUp, .libreLinkUpRussia:
                 if UserDefaults.standard.libreLinkUpEmail == nil || UserDefaults.standard.libreLinkUpPassword == nil {
                     dataSourceSensorMaxAgeOutlet.textColor = .systemRed
-                    dataSourceSensorMaxAgeOutlet.text = Texts_HomeView.libreLinkUpAccountCredentialsMissing
+                    dataSourceSensorMaxAgeOutlet.text = Texts_HomeView.followerAccountCredentialsMissing
                 } else if UserDefaults.standard.libreLinkUpPreventLogin {
                     dataSourceSensorMaxAgeOutlet.textColor = .systemRed
-                    dataSourceSensorMaxAgeOutlet.text = Texts_HomeView.libreLinkUpAccountCredentialsInvalid
+                    dataSourceSensorMaxAgeOutlet.text = Texts_HomeView.followerAccountCredentialsInvalid
+                }
+                
+            case .dexcomShare:
+                if UserDefaults.standard.dexcomShareAccountName == nil || UserDefaults.standard.dexcomSharePassword == nil {
+                    dataSourceSensorMaxAgeOutlet.textColor = .systemRed
+                    dataSourceSensorMaxAgeOutlet.text = Texts_HomeView.followerAccountCredentialsMissing
                 }
             }
         }
@@ -3643,7 +3654,7 @@ final class RootViewController: UIViewController, ObservableObject {
                 // if we should show it, then let's continue processing the lastReading array to create a valid contentState
                 if (UserDefaults.standard.isMaster || (!UserDefaults.standard.isMaster && UserDefaults.standard.followerBackgroundKeepAliveType == .heartbeat)) && UserDefaults.standard.liveActivityType != .disabled {
                     // create the contentState that will update the dynamic attributes of the Live Activity Widget
-                    let contentState = XDripWidgetAttributes.ContentState( bgReadingValues: bgReadingValues, bgReadingDates: bgReadingDates, isMgDl: UserDefaults.standard.bloodGlucoseUnitIsMgDl, slopeOrdinal: slopeOrdinal, deltaValueInUserUnit: deltaValueInUserUnit, urgentLowLimitInMgDl: UserDefaults.standard.urgentLowMarkValue, lowLimitInMgDl: UserDefaults.standard.lowMarkValue, highLimitInMgDl: UserDefaults.standard.highMarkValue, urgentHighLimitInMgDl: UserDefaults.standard.urgentHighMarkValue, liveActivityType: UserDefaults.standard.liveActivityType, dataSourceDescription: dataSourceDescription, deviceStatusCreatedAt: deviceStatusCreatedAt, deviceStatusLastLoopDate: deviceStatusLastLoopDate)
+                    let contentState = XDripWidgetAttributes.ContentState( bgReadingValues: bgReadingValues, bgReadingDates: bgReadingDates, isMgDl: UserDefaults.standard.bloodGlucoseUnitIsMgDl, slopeOrdinal: slopeOrdinal, deltaValueInUserUnit: deltaValueInUserUnit, urgentLowLimitInMgDl: UserDefaults.standard.urgentLowMarkValue, lowLimitInMgDl: UserDefaults.standard.lowMarkValue, highLimitInMgDl: UserDefaults.standard.highMarkValue, urgentHighLimitInMgDl: UserDefaults.standard.urgentHighMarkValue, liveActivityType: UserDefaults.standard.liveActivityType, dataSourceDescription: dataSourceDescription, followerPatientName: !UserDefaults.standard.isMaster ? UserDefaults.standard.followerPatientName : nil, deviceStatusCreatedAt: deviceStatusCreatedAt, deviceStatusLastLoopDate: deviceStatusLastLoopDate)
                     
                     LiveActivityManager.shared.runActivity(contentState: contentState, forceRestart: forceRestart)
                 } else {
@@ -3655,7 +3666,7 @@ final class RootViewController: UIViewController, ObservableObject {
                     date.timeIntervalSince1970
                 }
                 
-                let widgetSharedUserDefaultsModel = WidgetSharedUserDefaultsModel(bgReadingValues: bgReadingValues, bgReadingDatesAsDouble: bgReadingDatesAsDouble, isMgDl: UserDefaults.standard.bloodGlucoseUnitIsMgDl, slopeOrdinal: slopeOrdinal, deltaValueInUserUnit: deltaValueInUserUnit, urgentLowLimitInMgDl: UserDefaults.standard.urgentLowMarkValue, lowLimitInMgDl: UserDefaults.standard.lowMarkValue, highLimitInMgDl: UserDefaults.standard.highMarkValue, urgentHighLimitInMgDl: UserDefaults.standard.urgentHighMarkValue, dataSourceDescription: dataSourceDescription, deviceStatusCreatedAt: deviceStatusCreatedAt, deviceStatusLastLoopDate: deviceStatusLastLoopDate, allowStandByHighContrast: UserDefaults.standard.allowStandByHighContrast, forceStandByBigNumbers: UserDefaults.standard.forceStandByBigNumbers, keepAliveImageString: !UserDefaults.standard.isMaster ? UserDefaults.standard.followerBackgroundKeepAliveType.keepAliveImageString : nil)
+                let widgetSharedUserDefaultsModel = WidgetSharedUserDefaultsModel(bgReadingValues: bgReadingValues, bgReadingDatesAsDouble: bgReadingDatesAsDouble, isMgDl: UserDefaults.standard.bloodGlucoseUnitIsMgDl, slopeOrdinal: slopeOrdinal, deltaValueInUserUnit: deltaValueInUserUnit, urgentLowLimitInMgDl: UserDefaults.standard.urgentLowMarkValue, lowLimitInMgDl: UserDefaults.standard.lowMarkValue, highLimitInMgDl: UserDefaults.standard.highMarkValue, urgentHighLimitInMgDl: UserDefaults.standard.urgentHighMarkValue, dataSourceDescription: dataSourceDescription, followerPatientName: !UserDefaults.standard.isMaster ? UserDefaults.standard.followerPatientName : nil, deviceStatusCreatedAt: deviceStatusCreatedAt, deviceStatusLastLoopDate: deviceStatusLastLoopDate, allowStandByHighContrast: UserDefaults.standard.allowStandByHighContrast, forceStandByBigNumbers: UserDefaults.standard.forceStandByBigNumbers)
                 
                 // store the model in the shared user defaults using a name that is uniquely specific to this copy of the app as installed on
                 // the user's device - this allows several copies of the app to be installed without cross-contamination of widget data
@@ -4112,7 +4123,6 @@ extension RootViewController: FollowerDelegate {
                     // create a new reading
                     // we'll need to check which should be the active followerManager to know where to call the function
                     switch UserDefaults.standard.followerDataSourceType {
-                        
                     case .nightscout:
                         
                         if let followManager = nightscoutFollowManager {
@@ -4122,6 +4132,12 @@ extension RootViewController: FollowerDelegate {
                     case .libreLinkUp, .libreLinkUpRussia:
                         
                         if let followManager = libreLinkUpFollowManager {
+                            _ = followManager.createBgReading(followGlucoseData: followGlucoseData)
+                        }
+                        
+                    case .dexcomShare:
+                        
+                        if let followManager = dexcomShareFollowManager {
                             _ = followManager.createBgReading(followGlucoseData: followGlucoseData)
                         }
                         

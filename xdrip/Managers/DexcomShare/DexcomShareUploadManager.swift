@@ -57,9 +57,9 @@ class DexcomShareUploadManager:NSObject {
         UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.dexcomShareAccountName.rawValue, options: .new, context: nil)
         UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.useUSDexcomShareurl.rawValue, options: .new, context: nil)
         UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.uploadReadingstoDexcomShare.rawValue, options: .new, context: nil)
-        UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.dexcomShareSerialNumber.rawValue, options: .new, context: nil)
-        UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.dexcomShareUseSchedule.rawValue, options: .new, context: nil)
-        UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.dexcomShareSchedule.rawValue, options: .new, context: nil)
+        UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.dexcomShareUploadSerialNumber.rawValue, options: .new, context: nil)
+        UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.dexcomShareUploadUseSchedule.rawValue, options: .new, context: nil)
+        UserDefaults.standard.addObserver(self, forKeyPath: UserDefaults.Key.dexcomShareUploadSchedule.rawValue, options: .new, context: nil)
 
     }
     
@@ -85,14 +85,14 @@ class DexcomShareUploadManager:NSObject {
         }
         
         // check if accountname and password and serial number exist
-        guard UserDefaults.standard.dexcomShareSerialNumber != nil, UserDefaults.standard.dexcomShareAccountName != nil, UserDefaults.standard.dexcomSharePassword != nil else {
-            trace("in upload, dexcomShareSerialNumber or dexcomShareAccountName or dexcomSharePassword is nil", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
+        guard UserDefaults.standard.dexcomShareUploadSerialNumber != nil, UserDefaults.standard.dexcomShareAccountName != nil, UserDefaults.standard.dexcomSharePassword != nil else {
+            trace("in upload, dexcomShareUploadSerialNumber or dexcomShareAccountName or dexcomSharePassword is nil", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
             return
         }
         
         // if schedule is on, check if upload is needed according to schedule
-        if UserDefaults.standard.dexcomShareUseSchedule {
-            if let schedule = UserDefaults.standard.dexcomShareSchedule {
+        if UserDefaults.standard.dexcomShareUploadUseSchedule {
+            if let schedule = UserDefaults.standard.dexcomShareUploadSchedule {
                 if !schedule.indicatesOn(forWhen: Date()) {
                     
                     trace("in upload, schedule indicates not on", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
@@ -143,15 +143,15 @@ class DexcomShareUploadManager:NSObject {
                         }
                     }
                     
-                case UserDefaults.Key.uploadReadingstoDexcomShare, UserDefaults.Key.dexcomShareSerialNumber, UserDefaults.Key.useUSDexcomShareurl, UserDefaults.Key.dexcomShareUseSchedule, UserDefaults.Key.dexcomShareSchedule :
+                case UserDefaults.Key.uploadReadingstoDexcomShare, UserDefaults.Key.dexcomShareUploadSerialNumber, UserDefaults.Key.useUSDexcomShareurl, UserDefaults.Key.dexcomShareUploadUseSchedule, UserDefaults.Key.dexcomShareUploadSchedule :
                     
                     // if changing to enabled, then do a credentials test and if ok start upload, if fail don't give warning, that's the only difference with previous cases
                     if (keyValueObserverTimeKeeper.verifyKey(forKey: keyPathEnum.rawValue, withMinimumDelayMilliSeconds: 200)) {
                         
-                        // check if dexcom share is enabled
+                        // check if Dexcom Share Upload is enabled
                         if UserDefaults.standard.uploadReadingstoDexcomShare {
                             
-                            // check if required dexcom share settings are not nil
+                            // check if required Dexcom Share Upload settings are not nil
                             if requiredSettingsAreNotNil() {
 
                                 // test credentials
@@ -174,7 +174,7 @@ class DexcomShareUploadManager:NSObject {
 
                             }
                         } else {
-                            // dexcom share disabled, set sessionid to nil, although this is not really necessary
+                            // Dexcom Share Upload disabled, set sessionid to nil, although this is not really necessary
                             dexcomShareSessionId = nil
                         }
                     }
@@ -192,13 +192,13 @@ class DexcomShareUploadManager:NSObject {
     /// - parameters:
     ///     - lastConnectionStatusChangeTimeStamp : when was the last transmitter dis/reconnect - if nil then  1 1 1970 is used
     ///
-    /// dexcomShareSessionId and UserDefaults.standard.dexcomShareSerialNumber should be not nil
+    /// dexcomShareSessionId and UserDefaults.standard.dexcomShareUploadSerialNumber should be not nil
     private func startRemoteMonitoringSessionAndStartUpload(lastConnectionStatusChangeTimeStamp: Date?) {
         
         trace("in startRemoteMonitoringSessionAndStartUpload", log: log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
         
-        guard let url = URL(string: dexcomShareUrl), let dexcomShareSessionId = dexcomShareSessionId, let dexcomShareSerialNumber = UserDefaults.standard.dexcomShareSerialNumber, let dexcomShareAccountName = UserDefaults.standard.dexcomShareAccountName else {
-            trace("    failed to create url or dexcomShareSessionId or dexcomShareSerialNumber or dexcomShareAccountName is nil", log: log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error)
+        guard let url = URL(string: dexcomShareUrl), let dexcomShareSessionId = dexcomShareSessionId, let dexcomShareUploadSerialNumber = UserDefaults.standard.dexcomShareUploadSerialNumber, let dexcomShareAccountName = UserDefaults.standard.dexcomShareAccountName else {
+            trace("    failed to create url or dexcomShareSessionId or dexcomShareUploadSerialNumber or dexcomShareAccountName is nil", log: log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error)
             return
         }
         
@@ -212,7 +212,7 @@ class DexcomShareUploadManager:NSObject {
         
         components.scheme = startRemoteMonitoringSessionUrl.scheme
         components.host = startRemoteMonitoringSessionUrl.host
-        components.queryItems = [URLQueryItem(name: "sessionId", value: dexcomShareSessionId), URLQueryItem(name: "serialNumber", value: dexcomShareSerialNumber)]
+        components.queryItems = [URLQueryItem(name: "sessionId", value: dexcomShareSessionId), URLQueryItem(name: "serialNumber", value: dexcomShareUploadSerialNumber)]
         
         guard let newUrl = components.url else {
             trace("in startRemoteMonitoringSessionAndStartUpload, failed to create newUrl", log: log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error)
@@ -229,19 +229,18 @@ class DexcomShareUploadManager:NSObject {
         let sharedSession = URLSession.shared
 
         // Create upload Task
-        let task = sharedSession.uploadTask(with: request, from: "".data(using: .utf8), completionHandler: { (data, response, error) -> Void in
+        let task = sharedSession.uploadTask(with: request, from: "".data(using: .utf8), completionHandler: { [weak self] (data, response, error) -> Void in
+            guard let self = self else { return }
             
             trace("in startRemoteMonitoringSessionAndStartUpload, finished task", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
             
             // log the data when existing the scope
             defer {
-                if let data = data {
-                    if let dataAsString = String(bytes: data, encoding: .utf8) {
-                        trace("    data = %{public}@", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error, dataAsString)
-                    }
+                if let data = data, let dataAsString = String(bytes: data, encoding: .utf8) {
+                    trace("    data = %{public}@", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error, dataAsString)
                 }
             }
-
+            
             // error cases
             if let error = error {
                 trace("    error = %{public}@", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error, error.localizedDescription)
@@ -283,7 +282,7 @@ class DexcomShareUploadManager:NSObject {
                             trace("    new login failed with error MonitoredReceiverNotAssigned", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error)
                             DispatchQueue.main.async {
                                 if let messageHandler = self.messageHandler {
-                                    messageHandler(Texts_DexcomShareTestResult.uploadErrorWarning, self.createMonitoredReceiverNotAssignedMessage(acount: dexcomShareAccountName, serialNumber: dexcomShareSerialNumber))
+                                    messageHandler(Texts_DexcomShareTestResult.uploadErrorWarning, self.createMonitoredReceiverNotAssignedMessage(acount: dexcomShareAccountName, serialNumber: dexcomShareUploadSerialNumber))
                                 }
                             }
                             return
@@ -325,9 +324,9 @@ class DexcomShareUploadManager:NSObject {
         
         trace("in uploadBgReadingsToDexcomShare", log: log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
         
-        // dexcomShareSerialNumber and dexcomShareAccountName needed else no further processing
-        guard let dexcomShareSerialNumber = UserDefaults.standard.dexcomShareSerialNumber, let dexcomShareAccountName = UserDefaults.standard.dexcomShareAccountName else {
-            trace("    dexcomShareSerialNumber and/or dexcomShareAccountName are/is nil", log: log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error)
+        // dexcomShareUploadSerialNumber and dexcomShareAccountName needed else no further processing
+        guard let dexcomShareUploadSerialNumber = UserDefaults.standard.dexcomShareUploadSerialNumber, let dexcomShareAccountName = UserDefaults.standard.dexcomShareAccountName else {
+            trace("    dexcomShareUploadSerialNumber and/or dexcomShareAccountName are/is nil", log: log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error)
             return
         }
         
@@ -377,7 +376,7 @@ class DexcomShareUploadManager:NSObject {
         let bgReadingsDictionaryRepresentation = bgReadingsToUpload.map({$0.dictionaryRepresentationForDexcomShareUpload})
         let uploadDataAsDictionary:[String : Any] = [
             "Egvs" : bgReadingsDictionaryRepresentation,
-            "SN" : dexcomShareSerialNumber,
+            "SN" : dexcomShareUploadSerialNumber,
             "TA" : -5
         ]
         
@@ -390,7 +389,8 @@ class DexcomShareUploadManager:NSObject {
             let uploadData = try JSONSerialization.data(withJSONObject: uploadDataAsDictionary, options: [])
             
             // Create upload Task
-            let task = URLSession.shared.uploadTask(with: request, from: uploadData, completionHandler: { (data, response, error) -> Void in
+            let task = URLSession.shared.uploadTask(with: request, from: uploadData, completionHandler: { [weak self] (data, response, error) -> Void in
+                guard let self = self else { return }
                 
                 trace("in uploadBgReadingsToDexcomShare, finished task", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
                 
@@ -480,7 +480,7 @@ class DexcomShareUploadManager:NSObject {
                                     trace("in uploadBgReadingsToDexcomShare, new login failed with error MonitoredReceiverNotAssigned", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .error)
                                     DispatchQueue.main.async {
                                         if let messageHandler = self.messageHandler {
-                                            messageHandler(Texts_DexcomShareTestResult.uploadErrorWarning, self.createMonitoredReceiverNotAssignedMessage(acount: dexcomShareAccountName, serialNumber: dexcomShareSerialNumber))
+                                            messageHandler(Texts_DexcomShareTestResult.uploadErrorWarning, self.createMonitoredReceiverNotAssignedMessage(acount: dexcomShareAccountName, serialNumber: dexcomShareUploadSerialNumber))
                                         }
                                     }
                                     return
@@ -573,7 +573,8 @@ class DexcomShareUploadManager:NSObject {
             let sharedSession = URLSession.shared
             
             // Create upload Task
-            let task = sharedSession.uploadTask(with: request, from: uploadData, completionHandler: { (data, response, error) -> Void in
+            let task = sharedSession.uploadTask(with: request, from: uploadData, completionHandler: { [weak self] (data, response, error) -> Void in
+                guard let self = self else { return }
                 
                 trace("in loginAndStoreSessionId, finished task", log: self.log, category: ConstantsLog.categoryDexcomShareUploadManager, type: .info)
                 
@@ -758,5 +759,14 @@ class DexcomShareUploadManager:NSObject {
         request.setValue("Dexcom Share/3.0.2.11 CFNetwork/711.2.23 Darwin/14.0.0", forHTTPHeaderField: "User-Agent")
         
         return request
+    }
+    deinit {
+        UserDefaults.standard.removeObserver(self, forKeyPath: UserDefaults.Key.dexcomSharePassword.rawValue)
+        UserDefaults.standard.removeObserver(self, forKeyPath: UserDefaults.Key.dexcomShareAccountName.rawValue)
+        UserDefaults.standard.removeObserver(self, forKeyPath: UserDefaults.Key.useUSDexcomShareurl.rawValue)
+        UserDefaults.standard.removeObserver(self, forKeyPath: UserDefaults.Key.uploadReadingstoDexcomShare.rawValue)
+        UserDefaults.standard.removeObserver(self, forKeyPath: UserDefaults.Key.dexcomShareUploadSerialNumber.rawValue)
+        UserDefaults.standard.removeObserver(self, forKeyPath: UserDefaults.Key.dexcomShareUploadUseSchedule.rawValue)
+        UserDefaults.standard.removeObserver(self, forKeyPath: UserDefaults.Key.dexcomShareUploadSchedule.rawValue)
     }
 }
