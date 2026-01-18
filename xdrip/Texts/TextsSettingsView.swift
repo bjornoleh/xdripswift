@@ -93,7 +93,7 @@ class Texts_SettingsView {
     }()
     
     static let labelFollowerDataSourceType: String = {
-        return NSLocalizedString("settingsviews_labelFollowerDataSourceType", tableName: filename, bundle: Bundle.main, value: "Follower Data Source", comment: "data source settings, data source")
+        return NSLocalizedString("settingsviews_labelFollowerDataSourceType", tableName: filename, bundle: Bundle.main, value: "Data Source", comment: "data source settings, data source")
     }()
     
     static let labelUploadDataToNightscout: String = {
@@ -144,6 +144,10 @@ class Texts_SettingsView {
         return NSLocalizedString("settingsviews_followerPatientNameMessage", tableName: filename, bundle: Bundle.main, value: "Here you can optionally write the name of the person you are following.", comment: "data source settings, ask the user to enter the name of the person we are following if they want to")
     }()
     
+    static let followerServiceStatus: String = {
+        return NSLocalizedString("settingsviews_followerServiceStatus", tableName: filename, bundle: Bundle.main, value: "Status", comment: "data source settings, the status of the web follower service")
+    }()
+    
     static let nightscoutNotEnabled: String = {
         return NSLocalizedString("settingsviews_nightscoutNotEnabled", tableName: filename, bundle: Bundle.main, value: "Nightscout is disabled\n\nTo upload BG values to Nightscout, you must enable it in the Nightscout section.", comment: "data source settings, enable Nightscout in the Nightscout section")
     }()
@@ -153,7 +157,7 @@ class Texts_SettingsView {
     }()
     
     static let labelFollowerDataSourceRegion: String = {
-        return NSLocalizedString("settingsviews_labelFollowerDataSourceRegion", tableName: filename, bundle: Bundle.main, value: "Server (Country)", comment: "data source settings, data source region")
+        return NSLocalizedString("settingsviews_labelFollowerDataSourceRegion", tableName: filename, bundle: Bundle.main, value: "Region", comment: "data source settings, data source server or account region")
     }()
     
     // this is a default text for the settings row and should never really be used as we'll
@@ -163,7 +167,7 @@ class Texts_SettingsView {
     }()
     
     static let enterUsername = {
-        return NSLocalizedString("settingsviews_enterUsername", tableName: filename, bundle: Bundle.main, value: "Enter your username (e-mail)", comment: "follower settings, pop up that asks user to enter their username")
+        return NSLocalizedString("settingsviews_enterUsername", tableName: filename, bundle: Bundle.main, value: "Enter your username", comment: "follower settings, pop up that asks user to enter their username")
     }()
     
     static let enterPassword = {
@@ -366,7 +370,11 @@ class Texts_SettingsView {
     }()
     
     static let heartbeatG7Message:String = {
-        return NSLocalizedString("settingsviews_heartbeatG7Message", tableName: filename, bundle: Bundle.main, value: "IMPORTANT: Make sure the Dexcom app is running.\n\nEnter the Dexcom G7 bluetooth name shown in the iPhone Settings -> Bluetooth devices list.", comment: "transmitter settings, instructions for adding a G7 heartbeat")
+        return NSLocalizedString("settingsviews_heartbeatG7Message", tableName: filename, bundle: Bundle.main, value: "Enter the Dexcom G7/ONE+/Stelo bluetooth name shown in the iPhone Settings -> Bluetooth devices list.", comment: "transmitter settings, instructions for adding a G7 type heartbeat")
+    }()
+    
+    static let dexcomG7Message:String = {
+        return NSLocalizedString("settingsviews_dexcomG7Message", tableName: filename, bundle: Bundle.main, value: "Press OK to automatically try to find your sensor.\n\nIf you have trouble connecting then you can manually enter the bluetooth name shown in the iPhone Settings -> Bluetooth devices list.", comment: "transmitter settings, instructions for adding a G7 type transmitter")
     }()
     
     static let labelTransmitterIdTextForButton:String = {
